@@ -23,6 +23,20 @@
   },
   "homepage": "https://github.com/atom/electron-quick-start#readme",
   "devDependencies": {
-    "electron-prebuilt": "^0.36.0"
+    "coffee-react": "^4.1.0",
+    "electron-connect": "^0.3.4",
+    "electron-prebuilt": "^0.36.0",
+    "gulp-plumber": "^1.0.1",
+    "gulp-ruby-sass": "^2.0.6",
+    "gulp-util": "^3.0.7",
+    "history": "^1.17.0",
+    "material-ui": "^0.14.1",
+    "react": "^0.14.6",
+    "react-dom": "^0.14.6",
+    "react-redux": "^4.0.6",
+    "react-router": "^1.0.3",
+    "react-tap-event-plugin": "^0.2.1",
+    "redux": "^3.0.5",
+    "superagent": "^1.6.1"
   }
 }
