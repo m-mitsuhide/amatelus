@@ -6,9 +6,6 @@ request = require "superagent"
 apiPath = require "../config.js"
 Loading = require "./Loading.cjsx"
 
-
-Sortable = require 'react-sortable';
-console.log(Sortable)
 action = require "../action/DropAsset_action.cjsx"
 
 
@@ -85,12 +82,12 @@ class DropAsset extends React.Component
       <div className="list-box">
         {
           tmp.map ( item, idx ) ->
-            <Sortable key={idx}>
+            <div key={idx}>
               <div className="dragHandler"/>
               <div className="drop-area">
                 {item.title+idx}
               </div>
-            </Sortable>
+            </div>
         }
       </div>
       <RaisedButton primary={true} style={{position: "absolute", bottom: 10, right: 10, left: 10 }} label="Preview"/>
