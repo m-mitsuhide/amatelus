@@ -1,11 +1,15 @@
 React = require 'react'
 Redux = require 'redux'
 reactDOM = require 'react-dom'
+MUI = require 'material-ui'
 
 
 Login = require './view/Login.cjsx'
 ListMode = require './view/ListMode.cjsx'
+DevelopMode = require "./view/DevelopMode.cjsx"
+
 action = require "./action/Main_action.cjsx"
+AppBar = MUI.AppBar
 
 store = Redux.createStore (state,action)->
   if typeof state == 'undefined'
@@ -16,17 +20,26 @@ store = Redux.createStore (state,action)->
     else
       state = {
         userName: null,
-        viewMode: null#list, develop, generate
+        viewMode: null,#list, develop, generate
+        templateId: null
       }
   else if action.type == 'login'
     state = {
       userName: action.name,
-      viewMode: state.viewMode
+      viewMode: state.viewMode,
+      templateId: state.templateId
     }
   else if action.type == 'logout'
     state = {
       userName: null,
-      viewMode: state.viewMode
+      viewMode: null,
+      templateId: null
+    }
+  else if action.type == 'selectTemplate'
+    state = {
+      userName: state.userName,
+      viewMode: "develop",
+      templateId: action.id
     }
 
   if !state.viewMode
@@ -47,9 +60,13 @@ class MainComponent extends React.Component
     <div>
       {
         if @state.userName
+          <AppBar title={@state.userName}/>
+      }
+      {
+        if @state.userName
           switch @state.viewMode
             when "develop"
-              <div/>
+              <DevelopMode />
             when "geneator"
               <div/>
             else#list

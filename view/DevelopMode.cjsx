@@ -6,7 +6,15 @@ request = require "superagent"
 apiPath = require "../config.js"
 Loading = require "./Loading.cjsx"
 CloseBack = require "./CloseBack.cjsx"
-action = require "../action/ListMode_action.cjsx"
+DropAsset = require "./DropAsset.cjsx"
+
+action = require "../action/DevelopMode_action.cjsx"
+
+brace = require "brace"
+AceEditor = require 'react-ace'
+
+require 'brace/mode/javascript';
+require 'brace/theme/chrome';
 
 TextField = MUI.TextField
 Paper = MUI.Paper
@@ -16,7 +24,7 @@ ToggleStar = MUI.ToggleStar
 
 store = Redux.createStore (state,action)->
   if typeof state == 'undefined'
-    savedState = localStorage.ListModeState;
+    savedState = localStorage.DevelopModeState;
     if ( savedState )
       state = JSON.parse( savedState )
     else
@@ -52,7 +60,7 @@ store = Redux.createStore (state,action)->
   state
 
 
-class ListMode extends React.Component
+class DevelopMode extends React.Component
   constructor:(props)->
     super props
     @state = store.getState()
@@ -60,39 +68,33 @@ class ListMode extends React.Component
       @updateState()
 
   render:()->
-    <div id="ListMode">
-      {
-        if @state.viewMode == "input"
-          <div className="input-title">
-            <CloseBack onClose={
-              ()->store.dispatch action.closeInput()
-            }/>
-            <div className="paper">
-              <Paper zDepth={2}>
-                <div className="input-area">
-                  <TextField errorText={@state.error_inputTitle} onInput={
-                    (e)->store.dispatch( action.inputTitle( e.target.value ) )
-                  } value={@state.inputTitle} hintText="alphanumeric from 5 to 15" floatingLabelText="Template id" />
-                  <div className="enter-btn">
-                    <RaisedButton label="Create" disabled={!@state.complete} primary={true} onClick={
-                      ()=>action.submitTitle @state.inputTitle, @props.onSelect
-                    }/>
-                  </div>
-                </div>
-              </Paper>
-            </div>
-          </div>
-        else
-          <div className="btn-add">
-            <FloatingActionButton secondary={true}>
-            </FloatingActionButton>
-          </div>
-      }
-      <Style type="ListMode"/>
+    <div id="DevelopMode">
+      <div className="paper editor">
+        <Paper zDepth={2}>
+          <AceEditor
+            mode="javascript"
+            theme="chrome"
+            onChange={()->console.log 99}
+            name="UNIQUE_ID_OF_DIV"
+            value={"function(){}"}
+            fontSize={16}
+            height={"100%"}
+            width={"100%"}
+            editorProps={{$blockScrolling: true}}
+          />
+        </Paper>
+      </div>
+
+      <div className="paper droper">
+        <Paper zDepth={2}>
+          <DropAsset />
+        </Paper>
+      </div>
+      <Style type="DevelopMode"/>
     </div>
 
 
   updateState:()->
     @setState store.getState()
 
-module.exports = ListMode;
+module.exports = DevelopMode;

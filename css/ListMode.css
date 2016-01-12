@@ -2,3 +2,24 @@
   position: fixed;
   bottom: 15px;
   right: 15px; }
+#ListMode .input-title {
+  position: fixed;
+  z-index: 10000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; }
+#ListMode .paper {
+  width: 360px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); }
+#ListMode .input-area {
+  margin: 0 auto;
+  width: 256px; }
+#ListMode .enter-btn {
+  padding: 10px 0 20px;
+  overflow: hidden; }
+  #ListMode .enter-btn > div {
+    float: right; }

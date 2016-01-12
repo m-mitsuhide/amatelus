@@ -1,0 +1,53 @@
+#DevelopMode {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+
+  .input-title {
+    position: fixed;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .paper {
+    position: absolute;
+
+    &.editor {
+      top: 100px;
+      left: 15px;
+      right: 30%;
+      bottom: 15px;
+    }
+
+    &.droper {
+      top: 15px;
+      left: 70%;
+      right: 15px;
+      bottom: 15px;
+      margin-left: 20px;
+    }
+
+    & > div {
+      height: 100%;
+    }
+  }
+
+  .input-area {
+    margin: 0 auto;
+    width: 256px;
+  }
+
+  .enter-btn {
+    padding: 10px 0 20px;
+    overflow: hidden;
+    & > div {
+      float: right;
+    }
+  }
+}

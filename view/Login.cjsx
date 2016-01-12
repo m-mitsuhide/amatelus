@@ -34,7 +34,7 @@ store = Redux.createStore (state,action)->
 
     if state.id == ""
       state.error_id = null
-    else if !/^[0-9a-zA-Z]{8,15}$/.test state.id
+    else if !/^[0-9a-zA-Z]{5,15}$/.test state.id
       state.error_id = "Error"
 
     state.complete = state.id && state.pass && !state.error_id && !state.error_pass

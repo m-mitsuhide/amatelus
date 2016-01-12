@@ -5,8 +5,12 @@ Style = require "./Style.cjsx"
 request = require "superagent"
 apiPath = require "../config.js"
 Loading = require "./Loading.cjsx"
-CloseBack = require "./CloseBack.cjsx"
-action = require "../action/ListMode_action.cjsx"
+
+
+Sortable = require('react-sortable');
+
+action = require "../action/DropAsset_action.cjsx"
+
 
 TextField = MUI.TextField
 Paper = MUI.Paper
@@ -16,7 +20,7 @@ ToggleStar = MUI.ToggleStar
 
 store = Redux.createStore (state,action)->
   if typeof state == 'undefined'
-    savedState = localStorage.ListModeState;
+    savedState = localStorage.DropAssetState;
     if ( savedState )
       state = JSON.parse( savedState )
     else
@@ -52,7 +56,7 @@ store = Redux.createStore (state,action)->
   state
 
 
-class ListMode extends React.Component
+class DropAsset extends React.Component
   constructor:(props)->
     super props
     @state = store.getState()
@@ -60,39 +64,41 @@ class ListMode extends React.Component
       @updateState()
 
   render:()->
-    <div id="ListMode">
+    tmp = [
       {
-        if @state.viewMode == "input"
-          <div className="input-title">
-            <CloseBack onClose={
-              ()->store.dispatch action.closeInput()
-            }/>
-            <div className="paper">
-              <Paper zDepth={2}>
-                <div className="input-area">
-                  <TextField errorText={@state.error_inputTitle} onInput={
-                    (e)->store.dispatch( action.inputTitle( e.target.value ) )
-                  } value={@state.inputTitle} hintText="alphanumeric from 5 to 15" floatingLabelText="Template id" />
-                  <div className="enter-btn">
-                    <RaisedButton label="Create" disabled={!@state.complete} primary={true} onClick={
-                      ()=>action.submitTitle @state.inputTitle, @props.onSelect
-                    }/>
-                  </div>
-                </div>
-              </Paper>
-            </div>
-          </div>
-        else
-          <div className="btn-add">
-            <FloatingActionButton secondary={true}>
-            </FloatingActionButton>
-          </div>
+        type: "image",
+        multi: false,
+        title: "sample"
+      },
+      {
+        type: "image",
+        multi: false,
+        title: "sample"
+      },
+      {
+        type: "image",
+        multi: false,
+        title: "sample"
       }
-      <Style type="ListMode"/>
+    ]
+    <div id="DropAsset">
+      <div className="list-box">
+        {
+          tmp.map ( item, idx ) ->
+            <div key={idx}>
+              <div className="dragHandler"/>
+              <div className="drop-area">
+                {item.title+idx}
+              </div>
+            </div>
+        }
+      </div>
+      <RaisedButton primary={true} style={{position: "absolute", bottom: 10, right: 10, left: 10 }} label="Preview"/>
+      <Style type="DropAsset"/>
     </div>
 
 
   updateState:()->
     @setState store.getState()
 
-module.exports = ListMode;
+module.exports = DropAsset;
