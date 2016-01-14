@@ -36,6 +36,14 @@
     & > div {
       height: 100%;
     }
+
+    .ace_editor {
+      position: absolute;
+      top: 48px;
+      bottom: 0;
+
+    }
+
   }
 
   .input-area {

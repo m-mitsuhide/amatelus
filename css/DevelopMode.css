@@ -26,6 +26,10 @@
       margin-left: 20px; }
     #DevelopMode .paper > div {
       height: 100%; }
+    #DevelopMode .paper .ace_editor {
+      position: absolute;
+      top: 48px;
+      bottom: 0; }
   #DevelopMode .input-area {
     margin: 0 auto;
     width: 256px; }

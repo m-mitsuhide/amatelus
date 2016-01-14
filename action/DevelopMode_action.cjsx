@@ -1,16 +1,60 @@
 fs = require "fs"
+ps = require "../js/pubsub.js"
 
 module.exports = {
-  closeInput: ()->
+  setTemplateId: ( templateId, onLoad )->
+    source = {}
+    l = 0
+
+    ["goml","html","css","js"].forEach ( ext )->
+      fs.readFile( "./asset/template/" + templateId + "/index." + ext, "utf-8", ( err, data )->
+        source[ ext ] = data
+        if ++l == 4
+          onLoad source
+      )
+
     {
-      type: 'closeInput'
+      type: 'setTemplateId'
+      templateId
     }
-  inputTitle: ( text )->
+
+  setEditor: ( ext, e ) ->
+    e.commands.addCommand( {
+      name: "save"
+      exec: (editor)-> ps.pub "DevelopMode.save", null, {
+        ext
+        value: editor.getSession().getValue()
+      }
+      bindKey: {
+        mac: "cmd-s"
+        win: "ctrl-s"
+      }
+    })
+
     {
-      type: 'inputTitle',
-      value: text
+      type: "setEditor"
+      editor: e,
+      ext
     }
-  submitTitle: ( title, onSelect )->
-    fs.mkdirSync( "./asset/template/" + title )
-    onSelect( title )
+
+  setSource: ( source ) ->
+
+    {
+      type: "setSource"
+      source
+    }
+
+  changeTab: ( value ) ->
+    {
+      type: "changeTab"
+      value
+    }
+
+  saved: ( data ) ->
+    {
+      type: "saved",
+      ext: data.ext
+    }
+
+
 }

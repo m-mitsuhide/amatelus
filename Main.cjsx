@@ -66,7 +66,7 @@ class MainComponent extends React.Component
         if @state.userName
           switch @state.viewMode
             when "develop"
-              <DevelopMode />
+              <DevelopMode templateId={@state.templateId}/>
             when "geneator"
               <div/>
             else#list

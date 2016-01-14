@@ -9,11 +9,16 @@ CloseBack = require "./CloseBack.cjsx"
 DropAsset = require "./DropAsset.cjsx"
 
 action = require "../action/DevelopMode_action.cjsx"
+fs = require "fs"
+ps = require "../js/pubsub.js"
 
 brace = require "brace"
 AceEditor = require 'react-ace'
 
 require 'brace/mode/javascript';
+require 'brace/mode/xml';
+require 'brace/mode/html';
+require 'brace/mode/css';
 require 'brace/theme/chrome';
 
 TextField = MUI.TextField
@@ -21,6 +26,8 @@ Paper = MUI.Paper
 RaisedButton = MUI.RaisedButton
 FloatingActionButton = MUI.FloatingActionButton
 ToggleStar = MUI.ToggleStar
+Tabs = MUI.Tabs
+Tab = MUI.Tab
 
 store = Redux.createStore (state,action)->
   if typeof state == 'undefined'
@@ -29,65 +36,149 @@ store = Redux.createStore (state,action)->
       state = JSON.parse( savedState )
     else
       state = {
-        viewMode: "input",#input, preview, default
-        inputTitle: null,
-        error_inputTitle: null,
-        complete: false
+        templateId: null,
+        source: {},
+        editorHash: {},
+        editorArr: [],
+        currentTab: "goml",
+        saved: {}
       }
 
-  else if action.type == "closeInput"
-    state = {
-      viewMode: "default"
-      inputTitle: state.inputTitle,
-      error_inputTitle: state.error_inputTitle,
-      complete: state.complete
-    }
-  else if action.type == "inputTitle"
-    state = {
-      viewMode: state.viewMode,
-      inputTitle: action.value,
-      error_inputTitle: null,
-      complete: false
-    }
+  else if action.type == "setTemplateId"
+    state = Object.assign( {}, state, { templateId: action.templateId } )
 
-    if state.inputTitle == ""
-      state.error_inputTitle = null
-    else if !/^[0-9a-zA-Z]{5,15}$/.test state.inputTitle
-      state.error_inputTitle = "Error"
+  else if action.type == "setEditor"
+    state = Object.assign( {}, state )
 
-    state.complete = state.inputTitle && !state.error_inputTitle
+    state.editorHash[ action.ext ] = action.editor
+    state.editorArr.push action.editor
+
+  else if action.type == "setSource"
+    state = Object.assign( {}, state, {
+      source: Object.assign( {}, state.source, action.source )
+    } )
+
+    for key of action.source
+      state.saved[ key ] = if state.saved[ key ] == undefined then true else false
+
+    state.editorArr.forEach ( e )->
+      e.resize()
+  else if action.type == "changeTab"
+    state = Object.assign( {}, state, {
+      currentTab: action.value
+    })
+  else if action.type = "saved"
+    state.saved[ action.ext ] = true
 
   state
 
+ps.sub "DevelopMode.save", ( ctx, data )->
+  state = store.getState()
+  fs.writeFile "./asset/template/" + state.templateId + "/index." + data.ext, data.value, ()->
+    store.dispatch action.saved data
 
 class DevelopMode extends React.Component
   constructor:(props)->
     super props
     @state = store.getState()
+    store.dispatch action.setTemplateId props.templateId, ( data )->
+      store.dispatch action.setSource data
+
     store.subscribe ()=>
       @updateState()
+
 
   render:()->
     <div id="DevelopMode">
       <div className="paper editor">
         <Paper zDepth={2}>
-          <AceEditor
-            mode="javascript"
-            theme="chrome"
-            onChange={()->console.log 99}
-            name="UNIQUE_ID_OF_DIV"
-            value={"function(){}"}
-            fontSize={16}
-            height={"100%"}
-            width={"100%"}
-            editorProps={{$blockScrolling: true}}
-          />
+          <Tabs value={@state.currentTab}>
+            <Tab label={"GOML" + if @state.saved.goml == false then "*" else ""} value="goml" onClick={()->store.dispatch action.changeTab "goml"}>
+              <div/>
+            </Tab>
+            <Tab label={"HTML" + if @state.saved.html == false then "*" else ""} value="html" onClick={()->store.dispatch action.changeTab "html"}>
+              <div/>
+            </Tab>
+            <Tab label={"CSS" + if @state.saved.css == false then "*" else ""} value="css" onClick={()->store.dispatch action.changeTab "css"}>
+              <div/>
+            </Tab>
+            <Tab label={"JS" + if @state.saved.js == false then "*" else ""} value="js" onClick={()->store.dispatch action.changeTab "js"}>
+              <div/>
+            </Tab>
+          </Tabs>
+          <div style={{
+            display: if @state.currentTab == "goml" then "block" else "none"
+          }}>
+            <AceEditor
+              mode="xml"
+              theme="chrome"
+              onChange={( text )->store.dispatch action.setSource { "goml": text }}
+              name="UNIQUE_ID_OF_DIV0"
+              value={@state.source.goml}
+              fontSize={16}
+              width="100%"
+              height="auto"
+              editorProps={{$blockScrolling: false}}
+              onLoad={(e)->store.dispatch action.setEditor "goml", e }
+            />
+          </div>
+          <div style={{
+            display: if @state.currentTab == "html" then "block" else "none"
+          }}>
+            <AceEditor
+              mode="html"
+              theme="chrome"
+              onChange={( text )->store.dispatch action.setSource { "html": text }}
+              name="UNIQUE_ID_OF_DIV1"
+              value={@state.source.html}
+              fontSize={16}
+              width="100%"
+              height="auto"
+              editorProps={{$blockScrolling: false}}
+              onLoad={(e)->store.dispatch action.setEditor "html", e }
+
+            />
+          </div>
+          <div style={{
+            display: if @state.currentTab == "css" then "block" else "none"
+          }}>
+            <AceEditor
+              mode="css"
+              theme="chrome"
+              onChange={( text )->store.dispatch action.setSource { "css": text }}
+              name="UNIQUE_ID_OF_DIV2"
+              value={@state.source.css}
+              fontSize={16}
+              width="100%"
+              height="auto"
+              editorProps={{$blockScrolling: false}}
+              onLoad={(e)->store.dispatch action.setEditor "css", e }
+
+            />
+          </div>
+          <div style={{
+            display: if @state.currentTab == "js" then "block" else "none"
+          }}>
+            <AceEditor
+              mode="javascript"
+              theme="chrome"
+              onChange={( text )->store.dispatch action.setSource { "js": text }}
+              name="UNIQUE_ID_OF_DIV3"
+              value={@state.source.js}
+              fontSize={16}
+              width="100%"
+              height="auto"
+              editorProps={{$blockScrolling: false}}
+              onLoad={(e)->store.dispatch action.setEditor "js", e }
+
+            />
+          </div>
         </Paper>
       </div>
 
       <div className="paper droper">
         <Paper zDepth={2}>
-          <DropAsset />
+          <DropAsset templateId={@props.templateId}/>
         </Paper>
       </div>
       <Style type="DevelopMode"/>

@@ -1,4 +1,4 @@
-fs = require "fs"
+fs = require "fs-extra"
 
 module.exports = {
   closeInput: ()->
@@ -11,6 +11,6 @@ module.exports = {
       value: text
     }
   submitTitle: ( title, onSelect )->
-    fs.mkdirSync( "./asset/template/" + title )
+    fs.copySync( "./asset/template/_basic", "./asset/template/" + title )
     onSelect( title )
 }
