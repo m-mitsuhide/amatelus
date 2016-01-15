@@ -9,7 +9,11 @@
 		<scene>
 			<mesh id="earth" geo="#g" mtl="#m" style=""></mesh>
 
-
+<% type="image" title="３６０画像"%>
+<% type="text" title="タイトル222" %>
+<% type="image" title="asdfase" %>
+<% type="text" title="タイトル222" %>
+<% type="text" title="タイトル" %>
 			<camera style="position: 0 13 30; lookAtY: 11; cameraFar: 100000;">
 			    <light type="Dir" style="position: 1 3 5; lightColor: #9f9f9f;" />
 			</camera>
