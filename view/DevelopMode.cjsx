@@ -7,6 +7,7 @@ apiPath = require "../config.js"
 Loading = require "./Loading.cjsx"
 CloseBack = require "./CloseBack.cjsx"
 DropAsset = require "./DropAsset.cjsx"
+Preview = require "./Preview.cjsx"
 
 action = require "../action/DevelopMode_action.cjsx"
 fs = require "fs"
@@ -41,7 +42,8 @@ store = Redux.createStore (state,action)->
         editorHash: {},
         editorArr: [],
         currentTab: "goml",
-        saved: {}
+        saved: {},
+        onPreview: false
       }
 
   else if action.type == "setTemplateId"
@@ -67,8 +69,13 @@ store = Redux.createStore (state,action)->
     state = Object.assign( {}, state, {
       currentTab: action.value
     })
-  else if action.type = "saved"
+  else if action.type == "saved"
     state.saved[ action.ext ] = true
+
+  else if action.type == "switchPreview"
+    state = Object.assign( {}, state, {
+      onPreview: action.value
+      })
 
   state
 
@@ -178,9 +185,16 @@ class DevelopMode extends React.Component
 
       <div className="paper droper">
         <Paper zDepth={2}>
-          <DropAsset templateId={@props.templateId}/>
+          <DropAsset templateId={@props.templateId}
+            onPreview={()->store.dispatch action.switchPreview true}
+            onChange={(data)=>store.dispatch action.saveDropData data, @props.templateId}/>
         </Paper>
       </div>
+      {
+        if @state.onPreview
+          <Preview templateId={@props.templateId} onClose={()->store.dispatch action.switchPreview false}/>
+      }
+
       <Style type="DevelopMode"/>
     </div>
 

@@ -56,5 +56,51 @@ module.exports = {
       ext: data.ext
     }
 
+  switchPreview: ( bool )->
+    {
+      type: "switchPreview",
+      value: bool
+    }
+
+  saveDropData: ( list, templateId )->
+
+    json = { goml: [], html: [], css: [], js: []}
+
+    list.forEach ( data, idx )->
+      tmp = {
+        tag: data._tag
+        type: null
+        value: null
+      }
+
+      json[ data._ext ].push tmp
+
+      if data.value
+        if typeof data.value == "string"
+          tmp.type = "text"
+          tmp.value = data.value
+        else
+          tmp.value = []
+
+          data.value.forEach ( file )->
+            tmp.value.push "asset/" + file.name
+            reader = new FileReader();
+            reader.onload = (e)->
+              buf = new Buffer(e.target.result.byteLength);
+              source = new Uint8Array(e.target.result);
+              for i in [0..e.target.result.byteLength]
+                buf[i] = source[i];
+              fs.writeFile "./asset/template/" + templateId + "/preview/asset/" + file.name, buf
+            reader.readAsArrayBuffer file
+
+          tmp.type = "file"
+
+    fs.writeFile "./asset/template/" + templateId + "/data.json", JSON.stringify json
+
+    #console.log(id,data,"saveDropData")
+    {
+      type: "saveDropData"
+    }
+
 
 }

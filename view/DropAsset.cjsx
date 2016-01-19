@@ -33,7 +33,11 @@ store = Redux.createStore (state,action)->
     state = Object.assign( {}, state, { templateId: action.templateId } )
 
   else if action.type == "setList"
+
     state = Object.assign( {}, state, { list: Object.assign( state.list, action.list ) } )
+    for key of state.list
+      state.list[ key ].forEach ( data )->
+        data._ext = key
     state.listArr = state.list.goml.concat state.list.html, state.list.css, state.list.js
 
   state
@@ -54,6 +58,8 @@ class DropAsset extends React.Component
       @updateState()
 
   render:()->
+    props = @props
+
     <div id="DropAsset">
       <div className="list-box">
         {
@@ -65,15 +71,17 @@ class DropAsset extends React.Component
                 {
                   switch item.type
                     when "text"
-                      <TextInput onChange={( val )-> console.log val}/>
+                      <TextInput index={idx} onChange={props.onChange}/>
                     when "image"
-                      <FileDropper text="Image" onChange={( val )-> console.log val}/>
+                      <FileDropper index={idx} text="Image" onChange={props.onChange}/>
+                    when "video"
+                      <FileDropper index={idx} text="Video" onChange={props.onChange}/>
                 }
               </div>
             </div>
         }
       </div>
-      <RaisedButton primary={true} style={{position: "absolute", bottom: 10, right: 10, left: 10 }} label="Preview"/>
+      <RaisedButton onClick={@props.onPreview} primary={true} style={{position: "absolute", bottom: 10, right: 10, left: 10 }} label="Preview"/>
       <Style type="DropAsset"/>
     </div>
 
@@ -86,12 +94,13 @@ module.exports = DropAsset;
 class TextInput extends React.Component
   constructor:(props)->
     super props
-    @state = {
-      onInput: props.onChange
-    }
+  onInput: (e)=>
+    list = store.getState().listArr
+    list[ @props.index ].value = e.target.value
 
+    @props.onChange( list )
   render:()->
-    <TextField hintText="Text" style={{width:"100%"}} onInput={(e)=>@state.onInput( e.target.value )} />
+    <TextField hintText="Text" style={{width:"100%"}} onInput={@onInput} />
 
 
 
@@ -139,11 +148,13 @@ class FileDropper extends React.Component
     @store.dispatch( { type: "dragLeave" } )
 
     files = []
+    index = @props.index
+    _this = @
 
     length = e.dataTransfer.items.length
     counter = length
 
-    traverseFileTree = (item, path)=>
+    traverseFileTree = (item, path)->
 
       path = path || ""
       if item.isFile
@@ -151,10 +162,9 @@ class FileDropper extends React.Component
         item.file (file)->
           files.push( file );
           file.path = path + file.name;
-          file.url = URL.createObjectURL( file );
 
           if --counter == 0
-            FileDropper::dataExchange( files );
+            _this.dataExchange( files, index );
 
 
       else if item.isDirectory
@@ -167,23 +177,26 @@ class FileDropper extends React.Component
             traverseFileTree(entries[i], path + item.name + "/");
 
           if --counter == 0
-            FileDropper::dataExchange( files )
+            _this.dataExchange( files, index )
 
     for i in [0..length-1]
       traverseFileTree(e.dataTransfer.items[i].webkitGetAsEntry());
 
   onChange: (e)=>
-    files = [];
+    files = []
+
     Array.prototype.forEach.call e.target.files, ( file )->
-      file.url = URL.createObjectURL( file );
       file.path = file.webkitRelativePath;
       files.push( file );
 
-    @dataExchange( files );
+    @dataExchange( files, @props.index )
     e.target.value = null;
 
-  dataExchange: ( files )->
-    console.log files
+  dataExchange: ( files, index )=>
+    list = store.getState().listArr
+    list[ index ].value = files
+
+    @props.onChange list
 
   render: ()->
     <form className={ if @state.isDrag then "dropper on" else "dropper" } method="post" encType="multipart/form-data">

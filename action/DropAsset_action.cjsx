@@ -24,7 +24,9 @@ module.exports = {
       arr = data[ key ].match( /<%.+?%>/g ) || []
       list[ key ] = Array.prototype.map.call arr, ( val )->
         text = val.replace( "<%", "" ).replace( "%>", "" ).trim()
-        tmp = {}
+        tmp = {
+          _tag: val
+        }
         text.split( " " ).map ( t )->
           tmp[ t.split( "=" )[ 0 ] ] = t.split( "=" )[ 1 ].replace( /('|")/g, "" )
         tmp

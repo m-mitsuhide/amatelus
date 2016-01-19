@@ -3,6 +3,8 @@
 const electron = require('electron');
 // Module to control application life.
 const app = electron.app;
+//app.commandLine.appendSwitch('remote-debugging-port', '8315');
+//app.commandLine.appendSwitch('host-rules', 'MAP * 127.0.0.1');
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
@@ -52,3 +54,97 @@ app.on('activate', function () {
     createWindow();
   }
 });
+
+
+/*Web コンテンツを開発するための Node.js 簡易 Web サーバー サンプル*/
+//Web サーバーが Listen する IP アドレス
+var LISTEN_IP = '127.0.0.1';
+//Web サーバーが Listen する ポート
+var LISTEN_PORT = 1337;
+//ファイル名が指定されない場合に返す既定のファイル名
+var DEFAULT_FILE = "index.html";
+
+var http = require('http');
+var fs = require( "fs" );
+var url = require( "url" );
+
+//拡張子を抽出
+function getExtension(fileName) {
+    var fileNameLength = fileName.length;
+    var dotPoint = fileName.indexOf('.', fileNameLength - 5 );
+    var extn = fileName.substring(dotPoint + 1, fileNameLength);
+    return extn;
+}
+
+//content-type を指定
+function getContentType(fileName) {
+    var extentsion = getExtension(fileName).toLowerCase();
+    var contentType = {
+        'html': 'text/html',
+        'htm' : 'text/htm',
+        'css' : 'text/css',
+        'js' : 'text/javaScript; charset=utf-8',
+        'json' : 'application/json; charset=utf-8',
+        'xml' : 'application/xml; charset=utf-8',
+        'jpeg' : 'image/jpeg',
+        'jpg' : 'image/jpg',
+        'gif' : 'image/gif',
+        'png' : 'image/png',
+        'mp3' : 'audio/mp3',
+        'pmx' : 'application/pmx;',
+        'vmd' : 'application/vmd;',
+        };
+        var contentType_value = contentType[extentsion];
+        if(contentType_value === undefined){
+            contentType_value = 'text/plain';};
+    return contentType_value;
+}
+
+//Web サーバーのロジック
+var server  = http.createServer();
+var ajax = require( "superagent" );
+
+server.on('request',
+    function(request, response){
+
+        var requestedFile = url.parse(request.url,true).pathname;
+        var templateId = requestedFile.split("/")[1];
+
+        requestedFile = (requestedFile.split("").pop() === '/')
+? requestedFile + DEFAULT_FILE : requestedFile;
+        //console.log('Handle Url:' + requestedFile);
+        //console.log('File Extention:' + getExtension( requestedFile));
+        //console.log('Content-Type:' + getContentType( requestedFile));
+
+        if ( /^\/share\//.test( requestedFile ) ) {
+          ajax
+            .get( "https://mitsuhide.jthird.net" + requestedFile )
+            .end( function( err, req ) {console.log(req.body);
+              if(err){
+                  response.writeHead(404, {'Content-Type': 'text/plain'});
+                  response.write('not found\n');
+                  response.end();
+              }else{
+                  response.writeHead(200, {'Content-Type': getContentType(requestedFile)});
+                  response.write(req.body);
+                  response.end();
+              }
+            })
+        } else {
+          fs.readFile('asset/template/' + templateId + "/preview" + requestedFile.split(templateId)[1],'binary', function (err, data) {
+              if(err){
+                  response.writeHead(404, {'Content-Type': 'text/plain'});
+                  response.write('not found\n');
+                  response.end();
+              }else{
+                  response.writeHead(200, {'Content-Type': getContentType(requestedFile)});
+                  response.write(data, "binary");
+                  response.end();
+              }
+          });
+        }
+    }
+);
+
+server.listen(LISTEN_PORT, LISTEN_IP);
+console.log('Server running at http://' + LISTEN_IP + ':' + LISTEN_PORT);
