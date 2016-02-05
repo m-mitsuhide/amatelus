@@ -34,4 +34,27 @@
       float: right;
     }
   }
+
+  .panel {
+    width: 400px;
+    cursor: pointer;
+    position: relative;
+    margin: 10px;
+    &:hover {
+      opacity: 0.7;
+    }
+    & > img {
+      width: 100%;
+      vertical-align: bottom;
+    }
+    & > .title {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      padding: 10px 5px;
+      background: rgba( 0, 0, 0, .5 );
+      color: #fff;
+      box-sizing: border-box;
+    }
+  }
 }

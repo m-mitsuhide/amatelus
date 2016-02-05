@@ -11,10 +11,7 @@ action = require "../action/Preview_action.cjsx"
 fs = require "fs"
 
 TextField = MUI.TextField
-Paper = MUI.Paper
 RaisedButton = MUI.RaisedButton
-FloatingActionButton = MUI.FloatingActionButton
-ToggleStar = MUI.ToggleStar
 
 store = Redux.createStore (state,action)->
   if typeof state == 'undefined'
@@ -55,6 +52,9 @@ class Preview extends React.Component
         if @state.generated
           <webview disablewebsecurity src={"http://localhost:1337/" + @props.templateId + "/"} allowTransparency="true"/>
       }
+      <div className="buttons">
+        <RaisedButton primary={true} label="Generate" onClick={@props.onGenerate}/>
+      </div>
       <Style type="Preview"/>
     </div>
 

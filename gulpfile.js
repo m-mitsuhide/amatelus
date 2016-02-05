@@ -16,7 +16,7 @@ gulp.task('default', function () {
   // gulp.watch(['.serve/app.js', '.serve/browser/**/*.js'], electron.restart);
 
   // RendererProcessが読み込むリソースが変更されたら, RendererProcessにreloadさせる
-  gulp.watch(['Main.cjsx', 'index.html', '.serve/styles/**/*.css', './[^asset]*/*.{html,css,js,cjsx}'], electron.reload);
+  gulp.watch(['Main.cjsx', 'index.html', '.serve/styles/**/*.css', '[^(asset|public)]*/*.{html,css,js,cjsx}'], electron.reload);
 });
 
 gulp.task('build:css', function () {

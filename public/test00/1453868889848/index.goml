@@ -1,7 +1,7 @@
 <goml>
 	<head>
 		<geo id="g" type="Sphere" param="300 64 64" />
-		<txr id="t" src='asset/4img.jpg'/>
+		<txr id="t" src='asset/3img.jpg'/>
 		<mtl id="m" type="MeshBasic" param="map: #t;" />
 		
 		<txr id="textTxr" html="div"/>
@@ -10,7 +10,7 @@
 		<import>
 		    <style>
 		        #title {
-		            color: #f00;
+		            color: #fff;
 		            position: absolute;
 		            top: 0;
 		            height: 50px;
@@ -18,7 +18,7 @@
 		            text-align: center;
 		        }
 		    </style>
-		    <div id="title">asdfgert</div>
+		    <div id="title">asrfrefarterga</div>
 		</import>
 
 		<rdr frame="#jthree" camera="camera:first" param="preserveDrawingBuffer: true; antialias: true; clearColor: #fff;"/>

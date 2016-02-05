@@ -125,7 +125,7 @@ class DevelopMode extends React.Component
               fontSize={16}
               width="100%"
               height="auto"
-              editorProps={{$blockScrolling: false}}
+              editorProps={{$blockScrolling: Infinity}}
               onLoad={(e)->store.dispatch action.setEditor "goml", e }
             />
           </div>
@@ -141,7 +141,7 @@ class DevelopMode extends React.Component
               fontSize={16}
               width="100%"
               height="auto"
-              editorProps={{$blockScrolling: false}}
+              editorProps={{$blockScrolling: Infinity}}
               onLoad={(e)->store.dispatch action.setEditor "html", e }
 
             />
@@ -158,7 +158,7 @@ class DevelopMode extends React.Component
               fontSize={16}
               width="100%"
               height="auto"
-              editorProps={{$blockScrolling: false}}
+              editorProps={{$blockScrolling: Infinity}}
               onLoad={(e)->store.dispatch action.setEditor "css", e }
 
             />
@@ -175,7 +175,7 @@ class DevelopMode extends React.Component
               fontSize={16}
               width="100%"
               height="auto"
-              editorProps={{$blockScrolling: false}}
+              editorProps={{$blockScrolling: Infinity}}
               onLoad={(e)->store.dispatch action.setEditor "js", e }
 
             />

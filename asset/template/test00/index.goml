@@ -10,15 +10,15 @@
 		<import>
 		    <style>
 		        #title {
-		            color: #fff;
+		            color: #f00;
 		            position: absolute;
 		            top: 0;
 		            height: 50px;
-		            font-size: 20px;
+		            font-size: 40px;
 		            text-align: center;
 		        }
 		    </style>
-		    <div id="title"><% type="text" title="テキスト" %></div>
+		    <div id="title"><% type="text" title="あaaaaあああ"%></div>
 		</import>
 
 		<rdr frame="#jthree" camera="camera:first" param="preserveDrawingBuffer: true; antialias: true; clearColor: #fff;"/>

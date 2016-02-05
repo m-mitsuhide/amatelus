@@ -8,9 +8,16 @@
 
   webview, iframe {
     position: absolute;
-    top: 15%;
+    top: 65px;
+    bottom: 65px;
     left: 15%;
     width: 70%;
-    height: 70%;
+  }
+
+  .buttons {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }

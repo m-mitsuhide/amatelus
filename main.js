@@ -119,14 +119,18 @@ server.on('request',
         if ( /^\/share\//.test( requestedFile ) ) {
           ajax
             .get( "https://mitsuhide.jthird.net" + requestedFile )
-            .end( function( err, req ) {console.log(req.body);
+            .set( "Referer", "http://localhost" )
+            .end( function( err, req ) {
+              for (var key in req.body ) {
+                //console.log("test" + key);
+              }
               if(err){
                   response.writeHead(404, {'Content-Type': 'text/plain'});
                   response.write('not found\n');
                   response.end();
               }else{
                   response.writeHead(200, {'Content-Type': getContentType(requestedFile)});
-                  response.write(req.body);
+                  response.write(req.body, "binary");
                   response.end();
               }
             })

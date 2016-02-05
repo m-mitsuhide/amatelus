@@ -1,0 +1,15 @@
+#GenerateMode {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0; }
+  #GenerateMode .paper {
+    position: absolute; }
+    #GenerateMode .paper.droper {
+      top: 15px;
+      right: 70%;
+      left: 15px;
+      bottom: 15px; }
+    #GenerateMode .paper > div {
+      height: 100%; }

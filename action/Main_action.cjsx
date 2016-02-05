@@ -9,4 +9,18 @@ module.exports = {
       type: "selectTemplate",
       id: id
     }
+  goTop: ()->
+    {
+      type: "goTop"
+    }
+  clickTemplate: ( id )->
+    {
+      type: 'clickTemplate',
+      id
+    }
+  editTemplate: ( id )->
+    {
+      type: 'editTemplate',
+      id
+    }
 }

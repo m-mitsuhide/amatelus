@@ -7,25 +7,33 @@ apiPath = require "../config.js"
 Loading = require "./Loading.cjsx"
 CloseBack = require "./CloseBack.cjsx"
 action = require "../action/ListMode_action.cjsx"
+fs = require 'fs'
+
+GridList = require 'material-ui/lib/grid-list/grid-list';
+GridTile = require 'material-ui/lib/grid-list/grid-tile';
+StarBorder = require 'material-ui/lib/svg-icons/toggle/star-border';
+IconButton = require 'material-ui/lib/icon-button';
 
 TextField = MUI.TextField
 Paper = MUI.Paper
 RaisedButton = MUI.RaisedButton
 FloatingActionButton = MUI.FloatingActionButton
-ToggleStar = MUI.ToggleStar
+AddBtn = require 'react-material-icons/icons/content/add';
 
 store = Redux.createStore (state,action)->
   if typeof state == 'undefined'
-    savedState = localStorage.ListModeState;
-    if ( savedState )
-      state = JSON.parse( savedState )
-    else
-      state = {
-        viewMode: "input",#input, preview, default
-        inputTitle: null,
-        error_inputTitle: null,
-        complete: false
-      }
+    state = {
+      viewMode: "default",#input, preview, default
+      inputTitle: null,
+      error_inputTitle: null,
+      complete: false,
+      templateList: []
+    }
+
+    state.templateList = JSON.parse fs.readFileSync "./asset/template/list.json"
+
+    if state.templateList.length == 0
+      state.viewMode = "input"
 
   else if action.type == "closeInput"
     state = {
@@ -60,6 +68,8 @@ class ListMode extends React.Component
       @updateState()
 
   render:()->
+    props = @props
+
     <div id="ListMode">
       {
         if @state.viewMode == "input"
@@ -82,12 +92,20 @@ class ListMode extends React.Component
               </Paper>
             </div>
           </div>
-        else
-          <div className="btn-add">
-            <FloatingActionButton secondary={true}>
-            </FloatingActionButton>
+      }
+      {
+        @state.templateList.map ( list, idx )->
+          <div key={idx} templateId={list.id} className="panel" onClick={()->props.onClick(list.id)}>
+            <img src={"./asset/template/" + list.id + "/" + list.thumbnail }/>
+            <div className="title" onClick={(e)->e.stopPropagation();props.onEdit(list.id)}>{list.id}</div>
           </div>
       }
+
+      <div className="btn-add">
+        <FloatingActionButton secondary={true}>
+          <AddBtn/>
+        </FloatingActionButton>
+      </div>
       <Style type="ListMode"/>
     </div>
 

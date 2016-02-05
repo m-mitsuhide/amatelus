@@ -23,3 +23,21 @@
   overflow: hidden; }
   #ListMode .enter-btn > div {
     float: right; }
+#ListMode .panel {
+  width: 400px;
+  cursor: pointer;
+  position: relative;
+  margin: 10px; }
+  #ListMode .panel:hover {
+    opacity: 0.7; }
+  #ListMode .panel > img {
+    width: 100%;
+    vertical-align: bottom; }
+  #ListMode .panel > .title {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 10px 5px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    box-sizing: border-box; }
