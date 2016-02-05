@@ -30,10 +30,6 @@ store = Redux.createStore (state,action)->
       templateList: []
     }
 
-    state.templateList = JSON.parse fs.readFileSync "./asset/template/list.json"
-
-    if state.templateList.length == 0
-      state.viewMode = "input"
 
   else if action.type == "closeInput"
     state = {
@@ -64,6 +60,8 @@ class ListMode extends React.Component
   constructor:(props)->
     super props
     @state = store.getState()
+    @state.templateList = JSON.parse fs.readFileSync "./asset/template/list.json"
+
     store.subscribe ()=>
       @updateState()
 
@@ -97,7 +95,7 @@ class ListMode extends React.Component
         @state.templateList.map ( list, idx )->
           <div key={idx} templateId={list.id} className="panel" onClick={()->props.onClick(list.id)}>
             <img src={"./asset/template/" + list.id + "/" + list.thumbnail }/>
-            <div className="title" onClick={(e)->e.stopPropagation();props.onEdit(list.id)}>{list.id}</div>
+            <div className="title" onClick={(e)->e.stopPropagation();props.onEdit(list.id)}>{list.title}</div>
           </div>
       }
 

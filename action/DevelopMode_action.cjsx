@@ -37,6 +37,18 @@ module.exports = {
       ext
     }
 
+  changeTitle: ( text )->
+    {
+      type: 'changeTitle'
+      value: text
+    }
+
+  changeThumbnail: ( name )->
+    {
+      type: 'changeThumbnail'
+      value: name
+    }
+
   setSource: ( source ) ->
 
     {

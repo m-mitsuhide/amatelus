@@ -10,7 +10,7 @@ DropAsset = require "./DropAsset.cjsx"
 Preview = require "./Preview.cjsx"
 
 action = require "../action/DevelopMode_action.cjsx"
-fs = require "fs"
+fs = require "fs-extra"
 ps = require "../js/pubsub.js"
 
 brace = require "brace"
@@ -38,6 +38,9 @@ store = Redux.createStore (state,action)->
     else
       state = {
         templateId: null,
+        templateList: JSON.parse fs.readFileSync "./asset/template/list.json"
+        currentData: {},
+        error_title: false,
         source: {},
         editorHash: {},
         editorArr: [],
@@ -47,7 +50,24 @@ store = Redux.createStore (state,action)->
       }
 
   else if action.type == "setTemplateId"
-    state = Object.assign( {}, state, { templateId: action.templateId } )
+    state = Object.assign {}, state, {
+      templateId: action.templateId
+      currentData: state.templateList.filter( ( data )->
+        if data.id == action.templateId then data else false )[ 0 ]
+    }
+
+  else if action.type == "changeTitle"
+    state = Object.assign {}, state, {
+      error_title: if action.value == "" then "No title" else null
+    }
+    state.currentData.title = action.value
+    fs.writeFile "./asset/template/list.json", JSON.stringify state.templateList
+
+  else if action.type == "changeThumbnail"
+    state = Object.assign {}, state
+    state.currentData.thumbnail = action.value
+    fs.writeFile "./asset/template/list.json", JSON.stringify state.templateList
+
 
   else if action.type == "setEditor"
     state = Object.assign( {}, state )
@@ -56,12 +76,11 @@ store = Redux.createStore (state,action)->
     state.editorArr.push action.editor
 
   else if action.type == "setSource"
-    state = Object.assign( {}, state, {
-      source: Object.assign( {}, state.source, action.source )
-    } )
+    state = Object.assign {}, state
 
     for key of action.source
-      state.saved[ key ] = if state.saved[ key ] == undefined then true else false
+      state.saved[ key ] = if state.saved[ key ] == undefined || state.source[ key ] == action.source[ key ] then true else false
+    state.source = Object.assign {}, state.source, action.source
 
     state.editorArr.forEach ( e )->
       e.resize()
@@ -94,9 +113,33 @@ class DevelopMode extends React.Component
     store.subscribe ()=>
       @updateState()
 
+  onChangeThumbnail: ( e )=>
+    file = e.target.files[ 0 ]
+    fs.unlink "./asset/template/" + @state.templateId + "/" + @state.currentData.thumbnail, (err)=>
+      fs.copy file.path, "./asset/template/" + @state.templateId + "/" + file.name, ( err )->
+        if !err
+          store.dispatch action.changeThumbnail file.name
+    e.target.value = null
 
   render:()->
     <div id="DevelopMode">
+      <div className="title">
+        <div className="thumbnail">
+          <div style={{ backgroundImage: "url( ./asset/template/" + @state.templateId + "/" + @state.currentData.thumbnail + ")"}}>
+            <input type="file" onChange={@onChangeThumbnail}/>
+          </div>
+        </div>
+        <TextField className="input" errorText={@state.error_title} onChange={
+          (e)->store.dispatch( action.changeTitle( e.target.value ) )
+        } value={@state.currentData.title} hintText="Template Title"
+        style={{
+          fontSize: 20
+          width: 300
+          position: "absolute"
+          top: 10
+          left: 70
+        }} />
+      </div>
       <div className="paper editor">
         <Paper zDepth={2}>
           <Tabs value={@state.currentTab}>
