@@ -18,7 +18,7 @@
 		            text-align: center;
 		        }
 		    </style>
-		    <div id="title">asdfgert</div>
+		    <div id="title">gfdsa</div>
 		</import>
 
 		<rdr frame="#jthree" camera="camera:first" param="preserveDrawingBuffer: true; antialias: true; clearColor: #fff;"/>

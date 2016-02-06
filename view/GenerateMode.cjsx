@@ -81,8 +81,8 @@ class GenerateMode extends React.Component
       </div>
       <div className="paper works">
         {
-          @state.worksArr.map (name)->
-            <div></div>
+          @state.worksArr.map (name, idx)->
+            <div key={idx}></div>
         }
       </div>
       {

@@ -10,6 +10,8 @@
     border-bottom: 1px solid #ccc;
     padding: 10px 0;
     position: relative; }
+#DropAsset .dropped .dragHandler {
+  background: #9ff; }
 #DropAsset .dragHandler {
   position: absolute;
   top: 0;
@@ -21,6 +23,11 @@
 #DropAsset .drop-area {
   margin-left: 25px;
   margin-right: 10px; }
+#DropAsset .drop-title {
+  color: #666;
+  font-size: 80%; }
+#DropAsset .drop-value {
+  font-size: 80%; }
 #DropAsset .dropper {
   border-radius: 15px;
   text-align: center;

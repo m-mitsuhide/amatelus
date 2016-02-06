@@ -136,7 +136,7 @@ class DevelopMode extends React.Component
           fontSize: 20
           width: 300
           position: "absolute"
-          top: 10
+          top: 5
           left: 70
         }} />
       </div>

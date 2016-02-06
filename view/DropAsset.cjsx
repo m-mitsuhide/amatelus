@@ -19,33 +19,35 @@ ToggleStar = MUI.ToggleStar
 
 store = Redux.createStore (state,action)->
   if typeof state == 'undefined'
-    savedState = localStorage.DropAssetState;
-    if ( savedState )
-      state = JSON.parse( savedState )
-    else
-      state = {
-        templateId: null,
-        list: {},
-        listArr: []
-      }
+
+    state = {
+      templateId: null,
+      list: {},
+      listArr: []
+    }
 
   else if action.type == "setTemplateId"
     state = Object.assign( {}, state, { templateId: action.templateId } )
+    state.listArr.length = 0
 
   else if action.type == "setList"
 
     state = Object.assign( {}, state, { list: Object.assign( state.list, action.list ) } )
+    tmpArr = [];
     for key of state.list
       state.list[ key ].forEach ( data )->
         data._ext = key
-    state.listArr = state.list.goml.concat state.list.html, state.list.css, state.list.js
+        tmp = state.listArr[ +data.index ]
+        if tmp && tmp.type == data.type
+          data.value = tmp.value
+          data._returned = tmp._returned
+
+        tmpArr[ +data.index ] = data
+
+    state.listArr = tmpArr
 
   state
 
-ps.sub "DevelopMode.save", ( ctx, data )->
-  tmp = {}
-  tmp[ data.ext ] = data.value
-  store.dispatch action.setList tmp
 
 class DropAsset extends React.Component
   constructor:(props)->
@@ -54,8 +56,18 @@ class DropAsset extends React.Component
     store.dispatch action.setTemplateId props.templateId, ( data )->
       store.dispatch action.setList data
 
+    ps.sub "DevelopMode.save", @saved
     store.subscribe ()=>
       @updateState()
+
+  saved: ( ctx, data )=>
+    tmp = {}
+    tmp[ data.ext ] = data.value
+    store.dispatch action.setList tmp
+    @props.onChange @state.listArr
+
+  componentWillUnmount: ()->
+    ps.unsub "DevelopMode.save", @saved
 
   render:()->
     props = @props
@@ -64,10 +76,10 @@ class DropAsset extends React.Component
       <div className="list-box">
         {
           @state.listArr.map ( item, idx ) ->
-            <div key={idx}>
+            <div key={idx} className={if item._returned == "" then "" else "dropped"}>
               <div className="dragHandler"/>
               <div className="drop-area">
-                <span>{item.title}</span>
+                <span className="drop-title">{item.title}</span>
                 {
                   switch item.type
                     when "text"
@@ -76,6 +88,11 @@ class DropAsset extends React.Component
                       <FileDropper index={idx} text="Image" onChange={props.onChange}/>
                     when "video"
                       <FileDropper index={idx} text="Video" onChange={props.onChange}/>
+                }
+                {
+                  if item.type != "text"
+                  then <span className="drop-value">{item._returned}</span>
+                  else null
                 }
               </div>
             </div>
@@ -94,13 +111,18 @@ module.exports = DropAsset;
 class TextInput extends React.Component
   constructor:(props)->
     super props
+    @state = store.getState()
+    store.subscribe ()=>
+      @setState store.getState()
+
   onInput: (e)=>
-    list = store.getState().listArr
+    list = @state.listArr
     list[ @props.index ].value = e.target.value
+    list[ @props.index ]._returned = e.target.value
 
     @props.onChange( list )
   render:()->
-    <TextField hintText="Text" style={{width:"100%"}} onInput={@onInput} />
+    <TextField hintText="Text" value={@state.listArr[ @props.index ]._returned} style={{width:"100%"}} onInput={@onInput} />
 
 
 
@@ -195,12 +217,14 @@ class FileDropper extends React.Component
   dataExchange: ( files, index )=>
     list = store.getState().listArr
     list[ index ].value = files
+    list[ index ]._returned = files.map( ( file )->
+      file.name ).join ","
 
     @props.onChange list
 
   render: ()->
     <form className={ if @state.isDrag then "dropper on" else "dropper" } method="post" encType="multipart/form-data">
-      <span className="glyphicon glyphicon-share-alt"></span><span>{@props.text}</span>
+      <span>{@props.text}</span>
       <input type="file" className="form-control" webkitdirectory directory
         onDragEnter={@onDragEnter}
         onDragLeave={@onDragLeave}

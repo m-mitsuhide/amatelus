@@ -1,1 +1,1 @@
-{"goml":[{"tag":"<% type=\"image\" title=\"360画像\" %>","type":null,"value":null},{"tag":"<% type=\"text\" title=\"あaaaaあああ\"%>","type":null,"value":null}],"html":[],"css":[],"js":[]}
+{"goml":[{"tag":"<% index=\"1\" type=\"text\" title=\"あertasdeあああ\"%>","type":"text","value":"gfdsa"},{"tag":"<% index=\"2\" type=\"video\" title=\"360画像\" %>","type":"file","value":["asset/4img.jpg"]}],"html":[],"css":[],"js":[]}

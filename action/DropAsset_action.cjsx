@@ -26,6 +26,7 @@ module.exports = {
         text = val.replace( "<%", "" ).replace( "%>", "" ).trim()
         tmp = {
           _tag: val
+          _returned: ""
         }
         text.split( " " ).map ( t )->
           tmp[ t.split( "=" )[ 0 ] ] = t.split( "=" )[ 1 ].replace( /('|")/g, "" )
