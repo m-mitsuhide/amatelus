@@ -3,6 +3,7 @@ jThree( function( j3 ) {
 	$( "#loading" ).remove();
 
 	j3.Orbit();
+	j3.MMD.play();
 
 
 	function rotateEarth() {

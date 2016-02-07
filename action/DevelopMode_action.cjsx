@@ -1,4 +1,4 @@
-fs = require "fs"
+fs = require "fs-extra"
 ps = require "../js/pubsub.js"
 
 module.exports = {
@@ -90,21 +90,25 @@ module.exports = {
       json[ data._ext ].push tmp
 
       if data.value
-        if data.type == "text"
+        if typeof data.value == "string"
           tmp.value = data.value
         else
-          tmp.value = []
 
-          data.value.forEach ( file )->
-            tmp.value.push "asset/" + file.name
-            reader = new FileReader();
-            reader.onload = (e)->
-              buf = new Buffer(e.target.result.byteLength);
-              source = new Uint8Array(e.target.result);
-              for i in [0..e.target.result.byteLength]
-                buf[i] = source[i];
-              fs.writeFile "./asset/template/" + templateId + "/preview/asset/" + file.name, buf
-            reader.readAsArrayBuffer file
+          if data.type == "dir"
+            tmp.value = "asset/" + data._returned
+            fs.copySync data.value[ 0 ].path.split( "/" ).slice( 0, -1 ).join( "/" ), "./asset/template/" + templateId + "/preview/asset/" + data._returned.split( "/" )[ 0 ]
+          else
+            tmp.value = []
+            data.value.forEach ( file )->
+              tmp.value.push "asset/" + file.name
+              reader = new FileReader();
+              reader.onload = (e)->
+                buf = new Buffer(e.target.result.byteLength);
+                source = new Uint8Array(e.target.result);
+                for i in [0..e.target.result.byteLength]
+                  buf[i] = source[i];
+                fs.writeFile "./asset/template/" + templateId + "/preview/asset/" + file.name, buf
+              reader.readAsArrayBuffer file
 
 
     fs.writeFile "./asset/template/" + templateId + "/data.json", JSON.stringify json

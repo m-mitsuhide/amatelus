@@ -1,11 +1,13 @@
 React = require "react"
 Redux = require 'redux'
+ReactDOM = require 'react-dom'
 MUI = require 'material-ui'
 Style = require "./Style.cjsx"
 request = require "superagent"
 apiPath = require "../config.js"
 Loading = require "./Loading.cjsx"
 CloseBack = require "./CloseBack.cjsx"
+Color = require "react-color"
 
 action = require "../action/DropAsset_action.cjsx"
 
@@ -142,8 +144,12 @@ class DropAsset extends React.Component
                   switch item.type
                     when "text"
                       <TextInput index={idx} onChange={props.onChange}/>
-                    when "file"
-                      <FileDropper index={idx} onChange={props.onChange}/>
+                    when "file", "files"
+                      <FileDropper index={idx} type={item.type} onChange={props.onChange}/>
+                    when "color"
+                      <ColorPicker index={idx} onChange={props.onChange}/>
+                    when "dir"
+                      <DirSelector index={idx} type="dir" onChange={props.onChange}/>
                 }
                 {
                   if item.type != "text"
@@ -174,7 +180,10 @@ class DropAsset extends React.Component
               <div className="input-area">
                 <SelectField value={@state.snippetType} onChange={(event, idx, val)->store.dispatch action.changeSnippetType val}>
                   <MenuItem value="text" primaryText="Text"/>
+                  <MenuItem value="color" primaryText="Color"/>
                   <MenuItem value="file" primaryText="File"/>
+                  <MenuItem value="files" primaryText="Files"/>
+                  <MenuItem value="dir" primaryText="Dir"/>
                 </SelectField>
 
                 <TextField errorText={@state.error_snippetTitle} onInput={
@@ -214,6 +223,42 @@ class TextInput extends React.Component
     @props.onChange( list )
   render:()->
     <TextField hintText="Text" value={@state.listArr[ @props.index ]._returned} style={{width:"100%"}} onInput={@onInput} />
+
+class ColorPicker extends React.Component
+  constructor:(props)->
+    super props
+    @state = {
+      parentState: store.getState()
+      displayColorPicker: false
+    }
+
+    store.subscribe ()=>
+      @setState { parentState: store.getState() }
+
+  handleClick: ()=>
+    @setState { displayColorPicker: !@state.displayColorPicker }
+
+  handleClose: ()=>
+    @setState { displayColorPicker: false }
+
+  handleChange: (color)=>
+
+    list = @state.parentState.listArr
+    list[ @props.index ].value = '#' + color.hex
+    list[ @props.index ]._returned = '#' + color.hex
+
+    @props.onChange( list )
+
+  render:()->
+    <div className="color-picker">
+      <div className="color-btn" onClick={ @handleClick } style={{backgroundColor: @state.parentState.listArr[ @props.index ]._returned}}/>
+      <Color.default
+        display={ @state.displayColorPicker }
+        onClose={ @handleClose }
+        onChange={ @handleChange }
+        position="below"
+        type="compact" />
+    </div>
 
 
 
@@ -298,6 +343,7 @@ class FileDropper extends React.Component
   onChange: (e)=>
     files = []
 
+
     Array.prototype.forEach.call e.target.files, ( file )->
       file.path = file.webkitRelativePath;
       files.push( file );
@@ -308,15 +354,33 @@ class FileDropper extends React.Component
   dataExchange: ( files, index )=>
     list = store.getState().listArr
     list[ index ].value = files
-    list[ index ]._returned = files.map( ( file )->
-      file.name ).join ","
+
+    if @props.type != "dir"
+      list[ index ]._returned = files.map( ( file )->
+        file.name ).join ","
+    else
+      tmp = files.filter ( file )->
+        if /\.(x|pmx|obj|dae|json)$/.test file.name then file.name
+
+      list[ index ]._returned = files[ 0 ].path.split( "/" ).slice( -2, -1 )[ 0 ] + "/" + ( if tmp.length then tmp[ 0 ].name else files[ 0 ].name )
 
     @props.onChange list
 
+  componentDidMount: ()->
+    input = ReactDOM.findDOMNode @refs.customAttributes
+    if @props.type == "dir"
+      input.setAttribute('webkitdirectory', '')
+      input.setAttribute('directory', '')
+    else
+      input.removeAttribute('webkitdirectory')
+      input.removeAttribute('directory')
+
+
+
   render: ()->
     <form className={ if @state.isDrag then "dropper on" else "dropper" } method="post" encType="multipart/form-data">
-      <span>File</span>
-      <input type="file" className="form-control" webkitdirectory directory
+      <span>{@props.type.charAt(0).toUpperCase() + @props.type.slice(1)}</span>
+      <input type="file" className="form-control" multiple={@props.type == "files"} ref="customAttributes"
         onDragEnter={@onDragEnter}
         onDragLeave={@onDragLeave}
         onDrop={@onDrop}
@@ -324,3 +388,11 @@ class FileDropper extends React.Component
         onChange={@onChange}
       />
     </form>
+
+##componentDidMountを更新ごとに呼ばせる方法がわからんので新しいクラス作った
+class DirSelector extends FileDropper
+  constructor:(props)->
+    super props
+    @state = store.getState()
+    store.subscribe ()=>
+      @setState store.getState()

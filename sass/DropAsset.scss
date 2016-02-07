@@ -54,6 +54,8 @@
   	border: 3px dashed #ccc;
   	height: 60px;
   	position: relative;
+    margin: 5px 0;
+    
     &.on {
     	color: rgb(0, 188, 212);
     	border-color: rgb(0, 188, 212);
@@ -101,4 +103,14 @@
     }
   }
 
+  .color-picker {
+    position: relative;
+    .color-btn {
+      border: 5px #fff solid;
+      box-shadow: 0 0 0 1px rgba(0,0,0,.2);
+      cursor: pointer;
+      height: 30px;
+      margin: 5px 0;
+    }
+  }
 }

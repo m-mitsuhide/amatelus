@@ -35,7 +35,8 @@
   color: #ccc;
   border: 3px dashed #ccc;
   height: 60px;
-  position: relative; }
+  position: relative;
+  margin: 5px 0; }
   #DropAsset .dropper.on {
     color: #00bcd4;
     border-color: #00bcd4; }
@@ -70,3 +71,11 @@
   #DropAsset .snippet .enter-btn {
     padding: 20px 0;
     overflow: hidden; }
+#DropAsset .color-picker {
+  position: relative; }
+  #DropAsset .color-picker .color-btn {
+    border: 5px #fff solid;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    height: 30px;
+    margin: 5px 0; }

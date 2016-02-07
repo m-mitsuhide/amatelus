@@ -128,6 +128,9 @@ class DevelopMode extends React.Component
     editor.insert tag
     editor.focus()
 
+  componentWillUnmount: ()->
+    fs.emptyDir "./asset/template/" + @state.templateId + "/preview/asset/"
+
   render:()->
     <div id="DevelopMode">
       <div className="title">
