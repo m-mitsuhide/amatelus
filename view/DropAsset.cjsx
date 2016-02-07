@@ -10,6 +10,7 @@ CloseBack = require "./CloseBack.cjsx"
 Color = require "react-color"
 
 action = require "../action/DropAsset_action.cjsx"
+fs = require "fs"
 
 ps = require "../js/pubsub.js"
 
@@ -343,10 +344,19 @@ class FileDropper extends React.Component
   onChange: (e)=>
     files = []
 
+    if @props.type == "dir"
+      path = e.target.files[ 0 ].path
+      dirName = path.split( "/" ).pop()
+      fs.readdirSync( path ).forEach ( name )->
+        files.push {
+          name: name
+          path: path + "/" + name
+        }
+    else
+      Array.prototype.forEach.call e.target.files, ( file )->
+        file.path = file.webkitRelativePath;
+        files.push( file );
 
-    Array.prototype.forEach.call e.target.files, ( file )->
-      file.path = file.webkitRelativePath;
-      files.push( file );
 
     @dataExchange( files, @props.index )
     e.target.value = null;

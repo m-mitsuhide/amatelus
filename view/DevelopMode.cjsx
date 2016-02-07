@@ -129,7 +129,15 @@ class DevelopMode extends React.Component
     editor.focus()
 
   componentWillUnmount: ()->
-    fs.emptyDir "./asset/template/" + @state.templateId + "/preview/asset/"
+    fs.emptyDir "./asset/template/" + @state.templateId + "/preview/asset/", ()->
+      return
+      
+    json = JSON.parse fs.readFileSync "./asset/template/" + @state.templateId + "/data.json"
+    for key, val of json
+      val.forEach ( obj )->
+        delete obj.value
+    fs.writeFileSync "./asset/template/" + @state.templateId + "/data.json", JSON.stringify json
+
 
   render:()->
     <div id="DevelopMode">

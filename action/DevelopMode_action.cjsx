@@ -109,6 +109,9 @@ module.exports = {
                   buf[i] = source[i];
                 fs.writeFile "./asset/template/" + templateId + "/preview/asset/" + file.name, buf
               reader.readAsArrayBuffer file
+              
+            if data.type == "file"
+              tmp.value = tmp.value[ 0 ]
 
 
     fs.writeFile "./asset/template/" + templateId + "/data.json", JSON.stringify json
