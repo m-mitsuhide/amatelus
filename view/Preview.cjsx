@@ -79,7 +79,7 @@ class Preview extends React.Component
         fs.readFile "./asset/template/" + id + "/index." + ext, "utf-8", ( err, text )->
           text = text.replace /(["'])\/share\//g, "$1https://mitsuhide.jthird.net/share/"
           json[ ext ].forEach ( data )=>
-            text = text.replace data.tag, data.value || ""
+            text = text.replace data.tag, data.value || data.default || ""
 
           fs.writeFile "./asset/template/" + id + "/preview/index." + ext, text, ( err )->
             if ++n == 4

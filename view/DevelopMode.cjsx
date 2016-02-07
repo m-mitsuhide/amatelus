@@ -37,22 +37,24 @@ store = Redux.createStore (state,action)->
       state = JSON.parse( savedState )
     else
       state = {
-        templateId: null,
-        templateList: JSON.parse fs.readFileSync "./asset/template/list.json"
-        currentData: {},
-        error_title: false,
-        source: {},
-        editorHash: {},
-        editorArr: [],
-        currentTab: "goml",
-        saved: {},
+        templateId: null
+        templateList: []
+        currentData: {}
+        error_title: false
+        source: {}
+        editorHash: {}
+        editorArr: []
+        currentTab: "goml"
+        saved: {}
         onPreview: false
       }
 
   else if action.type == "setTemplateId"
+    newList = JSON.parse fs.readFileSync "./asset/template/list.json"
     state = Object.assign {}, state, {
       templateId: action.templateId
-      currentData: state.templateList.filter( ( data )->
+      templateList: newList
+      currentData: newList.filter( ( data )->
         if data.id == action.templateId then data else false )[ 0 ]
     }
 
@@ -120,6 +122,11 @@ class DevelopMode extends React.Component
         if !err
           store.dispatch action.changeThumbnail file.name
     e.target.value = null
+
+  insertSnippet: ( tag )=>
+    editor = @state.editorHash[ @state.currentTab ];
+    editor.insert tag
+    editor.focus()
 
   render:()->
     <div id="DevelopMode">
@@ -228,7 +235,8 @@ class DevelopMode extends React.Component
 
       <div className="paper droper">
         <Paper zDepth={2}>
-          <DropAsset templateId={@props.templateId}
+          <DropAsset templateId={@props.templateId} mode="develop"
+            onInsert={@insertSnippet}
             onPreview={()->store.dispatch action.switchPreview true}
             onChange={(data)=>store.dispatch action.saveDropData data, @props.templateId}/>
         </Paper>

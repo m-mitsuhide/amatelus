@@ -35,4 +35,31 @@ module.exports = {
       type: "setList",
       list
     }
+
+  createSnippet: ( bool )->
+    {
+      type: "createSnippet"
+      value: bool
+    }
+  changeSnippetType: ( value )->
+    {
+      type: "changeSnippetType"
+      value
+    }
+  snippetTitle: ( value )->
+    {
+      type: "snippetTitle"
+      value
+    }
+  snippetDefault: ( value )->
+    {
+      type: "snippetDefault"
+      value
+    }
+  generate: ( value, onInsert )->
+    {
+      type: "generate"
+      value
+      onInsert
+    }
 }

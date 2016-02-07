@@ -73,4 +73,32 @@
     }
   }
 
+  .snippet {
+    position: fixed;
+    top: 64px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+
+    .frame {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate( -50%, -50% );
+      width: 360px;
+    }
+
+    .input-area {
+      margin: 0 auto;
+      width: 256px;
+      padding: 30px 0 15px;
+    }
+
+    .enter-btn {
+      padding: 20px 0;
+      overflow: hidden;
+    }
+  }
+
 }

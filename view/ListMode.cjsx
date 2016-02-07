@@ -23,35 +23,9 @@ AddBtn = require 'react-material-icons/icons/content/add';
 store = Redux.createStore (state,action)->
   if typeof state == 'undefined'
     state = {
-      viewMode: "default",#input, preview, default
-      inputTitle: null,
-      error_inputTitle: null,
-      complete: false,
+      viewMode: "default"# preview, default
       templateList: []
     }
-
-
-  else if action.type == "closeInput"
-    state = {
-      viewMode: "default"
-      inputTitle: state.inputTitle,
-      error_inputTitle: state.error_inputTitle,
-      complete: state.complete
-    }
-  else if action.type == "inputTitle"
-    state = {
-      viewMode: state.viewMode,
-      inputTitle: action.value,
-      error_inputTitle: null,
-      complete: false
-    }
-
-    if state.inputTitle == ""
-      state.error_inputTitle = null
-    else if !/^[0-9a-zA-Z]{5,15}$/.test state.inputTitle
-      state.error_inputTitle = "Error"
-
-    state.complete = state.inputTitle && !state.error_inputTitle
 
   state
 
@@ -70,37 +44,18 @@ class ListMode extends React.Component
 
     <div id="ListMode">
       {
-        if @state.viewMode == "input"
-          <div className="input-title">
-            <CloseBack onClose={
-              ()->store.dispatch action.closeInput()
-            }/>
-            <div className="paper">
-              <Paper zDepth={2}>
-                <div className="input-area">
-                  <TextField errorText={@state.error_inputTitle} onInput={
-                    (e)->store.dispatch( action.inputTitle( e.target.value ) )
-                  } value={@state.inputTitle} hintText="alphanumeric from 5 to 15" floatingLabelText="Template id" />
-                  <div className="enter-btn">
-                    <RaisedButton label="Create" disabled={!@state.complete} primary={true} onClick={
-                      ()=>action.submitTitle @state.inputTitle, @props.onSelect
-                    }/>
-                  </div>
-                </div>
-              </Paper>
-            </div>
-          </div>
-      }
-      {
         @state.templateList.map ( list, idx )->
-          <div key={idx} templateId={list.id} className="panel" onClick={()->props.onClick(list.id)}>
-            <img src={"./asset/template/" + list.id + "/" + list.thumbnail }/>
-            <div className="title" onClick={(e)->e.stopPropagation();props.onEdit(list.id)}>{list.title}</div>
+          <div key={idx} className="panel">
+            <div onClick={()->props.onClick(list.id)} style={{backgroundImage: "url(./asset/template/" + list.id + "/" + list.thumbnail + ")"}}>
+              <div className="title" onClick={(e)->e.stopPropagation();props.onEdit(list.id)}>{list.title}</div>
+            </div>
           </div>
       }
 
       <div className="btn-add">
-        <FloatingActionButton secondary={true}>
+        <FloatingActionButton secondary={true} onClick={
+          ()=>action.createTemplate @props.onSelect
+          }>
           <AddBtn/>
         </FloatingActionButton>
       </div>

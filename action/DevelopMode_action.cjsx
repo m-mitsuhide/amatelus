@@ -81,15 +81,16 @@ module.exports = {
     list.forEach ( data, idx )->
       tmp = {
         tag: data._tag
-        type: null
+        type: data.type
         value: null
       }
+
+      if data.default then tmp.default = data.default
 
       json[ data._ext ].push tmp
 
       if data.value
-        if typeof data.value == "string"
-          tmp.type = "text"
+        if data.type == "text"
           tmp.value = data.value
         else
           tmp.value = []
@@ -105,7 +106,6 @@ module.exports = {
               fs.writeFile "./asset/template/" + templateId + "/preview/asset/" + file.name, buf
             reader.readAsArrayBuffer file
 
-          tmp.type = "file"
 
     fs.writeFile "./asset/template/" + templateId + "/data.json", JSON.stringify json
 
@@ -113,6 +113,5 @@ module.exports = {
     {
       type: "saveDropData"
     }
-
 
 }

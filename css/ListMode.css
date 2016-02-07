@@ -2,38 +2,18 @@
   position: fixed;
   bottom: 15px;
   right: 15px; }
-#ListMode .input-title {
-  position: fixed;
-  z-index: 10000;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%; }
-#ListMode .paper {
-  width: 360px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); }
-#ListMode .input-area {
-  margin: 0 auto;
-  width: 256px; }
-#ListMode .enter-btn {
-  padding: 10px 0 20px;
-  overflow: hidden; }
-  #ListMode .enter-btn > div {
-    float: right; }
 #ListMode .panel {
-  width: 400px;
-  cursor: pointer;
-  position: relative;
-  margin: 10px; }
-  #ListMode .panel:hover {
-    opacity: 0.7; }
-  #ListMode .panel > img {
-    width: 100%;
-    vertical-align: bottom; }
-  #ListMode .panel > .title {
+  width: 33.333%;
+  float: left; }
+  #ListMode .panel > div {
+    cursor: pointer;
+    padding-top: 56.25%;
+    position: relative;
+    background-position: center;
+    background-size: cover; }
+    #ListMode .panel > div:hover {
+      opacity: 0.7; }
+  #ListMode .panel .title {
     position: absolute;
     bottom: 0;
     width: 100%;

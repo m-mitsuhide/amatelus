@@ -5,49 +5,21 @@
     right: 15px;
   }
 
-  .input-title {
-    position: fixed;
-    z-index: 10000;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  .paper {
-    width: 360px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-  }
-
-  .input-area {
-    margin: 0 auto;
-    width: 256px;
-  }
-
-  .enter-btn {
-    padding: 10px 0 20px;
-    overflow: hidden;
-    & > div {
-      float: right;
-    }
-  }
-
   .panel {
-    width: 400px;
-    cursor: pointer;
-    position: relative;
-    margin: 10px;
-    &:hover {
-      opacity: 0.7;
+    width: 33.333%;
+    float: left;
+
+    & > div {
+      cursor: pointer;
+      padding-top: 56.25%;
+      position: relative;
+      background-position: center;
+      background-size: cover;
+      &:hover {
+        opacity: 0.7;
+      }
     }
-    & > img {
-      width: 100%;
-      vertical-align: bottom;
-    }
-    & > .title {
+    .title {
       position: absolute;
       bottom: 0;
       width: 100%;

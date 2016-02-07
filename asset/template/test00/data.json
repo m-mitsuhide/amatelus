@@ -1,1 +1,1 @@
-{"goml":[{"tag":"<% index=\"1\" type=\"text\" title=\"あertasdeあああ\"%>","type":"text","value":"gfdsa"},{"tag":"<% index=\"2\" type=\"video\" title=\"360画像\" %>","type":"file","value":["asset/4img.jpg"]}],"html":[],"css":[],"js":[]}
+{"goml":[{"tag":"<% index=\"0\" type=\"file\" title=\"360画像\" %>","type":"file","value":null},{"tag":"<% index=\"3\" type=\"text\" default=\"Default!\" title=\"文字が浮かぶよ\"%>","type":"text","value":null,"default":"Default!"}],"html":[],"css":[],"js":[]}

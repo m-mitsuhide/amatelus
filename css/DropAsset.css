@@ -50,3 +50,23 @@
     cursor: pointer;
     opacity: 0;
     font-size: 0; }
+#DropAsset .snippet {
+  position: fixed;
+  top: 64px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10; }
+  #DropAsset .snippet .frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px; }
+  #DropAsset .snippet .input-area {
+    margin: 0 auto;
+    width: 256px;
+    padding: 30px 0 15px; }
+  #DropAsset .snippet .enter-btn {
+    padding: 20px 0;
+    overflow: hidden; }

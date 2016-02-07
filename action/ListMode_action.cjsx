@@ -1,16 +1,16 @@
 fs = require "fs-extra"
 
 module.exports = {
-  closeInput: ()->
-    {
-      type: 'closeInput'
+  createTemplate: ( onSelect )->
+    hash = Date.now()
+    fs.copySync "./asset/template/_basic", "./asset/template/" + hash
+    json = JSON.parse fs.readFileSync "./asset/template/list.json"
+    json.push {
+      id: hash
+      thumbnail: "default.jpg"
+      title: "New Template"
     }
-  inputTitle: ( text )->
-    {
-      type: 'inputTitle',
-      value: text
-    }
-  submitTitle: ( title, onSelect )->
-    fs.copySync( "./asset/template/_basic", "./asset/template/" + title )
-    onSelect( title )
+    fs.writeFileSync "./asset/template/list.json", JSON.stringify json
+    fs.mkdirSync "./public/" + hash
+    onSelect hash
 }
