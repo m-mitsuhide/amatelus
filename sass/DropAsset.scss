@@ -55,7 +55,7 @@
   	height: 60px;
   	position: relative;
     margin: 5px 0;
-    
+
     &.on {
     	color: rgb(0, 188, 212);
     	border-color: rgb(0, 188, 212);
@@ -77,7 +77,7 @@
 
   .snippet {
     position: fixed;
-    top: 64px;
+    top: 0;
     bottom: 0;
     left: 0;
     width: 100%;

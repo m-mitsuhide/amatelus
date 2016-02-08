@@ -1,15 +1,35 @@
 #GenerateMode {
   position: fixed;
-  top: 64px;
+  top: 60px;
   left: 0;
   right: 0;
   bottom: 0; }
-  #GenerateMode .paper {
-    position: absolute; }
-    #GenerateMode .paper.droper {
-      top: 15px;
-      right: 70%;
-      left: 15px;
-      bottom: 15px; }
-    #GenerateMode .paper > div {
-      height: 100%; }
+  #GenerateMode .droper {
+    top: 0;
+    right: 70%;
+    left: 0;
+    bottom: 0;
+    position: absolute;
+    border-right: 1px solid #ccc; }
+  #GenerateMode .result {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 30%; }
+    #GenerateMode .result .device {
+      position: absolute;
+      width: 30%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); }
+    #GenerateMode .result .phone {
+      width: 100%; }
+    #GenerateMode .result .viewer {
+      position: absolute;
+      top: 12.4%;
+      bottom: 12.4%;
+      left: 6.4%;
+      right: 6.2%;
+      background: center;
+      background-size: cover; }

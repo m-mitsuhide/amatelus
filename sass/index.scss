@@ -3,3 +3,17 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+#header {
+  height: 60px;
+  border-bottom: 1px solid #ccc;
+  .logo {
+    height: 30px;
+    margin: 15px;
+    opacity: 0.6;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

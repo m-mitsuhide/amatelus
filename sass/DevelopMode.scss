@@ -1,6 +1,6 @@
 #DevelopMode {
   position: fixed;
-  top: 64px;
+  top: 60px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -34,26 +34,29 @@
     }
   }
 
+  .droper {
+    position: absolute;
+    top: 0;
+    left: 70%;
+    right: 0;
+    bottom: 0;
+    margin-left: 30px;
+    border-left: 1px solid #ccc;
+  }
+
+
   .paper {
     position: absolute;
+
+    & > div {
+      height: 100%;
+    }
 
     &.editor {
       top: 100px;
       left: 15px;
       right: 30%;
       bottom: 15px;
-    }
-
-    &.droper {
-      top: 15px;
-      left: 70%;
-      right: 15px;
-      bottom: 15px;
-      margin-left: 20px;
-    }
-
-    & > div {
-      height: 100%;
     }
 
     .ace_editor {

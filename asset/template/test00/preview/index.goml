@@ -1,7 +1,7 @@
 <goml>
 	<head>
 		<geo id="g" type="Sphere" param="300 64 64" />
-		<txr id="t" src='https://mitsuhide.jthird.net/share/Mitsuhide/img/sky.png'/>
+		<txr id="t" src='asset/5img.jpg'/>
 		<mtl id="m" type="MeshBasic" param="map: #t;" />
 		
 		<txr id="textTxr" html="div"/>
@@ -10,7 +10,7 @@
 		<import>
 		    <style>
 		        #title {
-		            color: #000;
+		            color: #f00;
 		            position: absolute;
 		            top: 0;
 		            height: 120px;
@@ -18,7 +18,7 @@
 		            text-align: center;
 		        }
 		    </style>
-		    <div id="title">Default!</div>
+		    <div id="title">ミクダヨー</div>
 		</import>
 
 		<rdr frame="#jthree" camera="camera:first" param="preserveDrawingBuffer: true; antialias: true; clearColor: #fff;"/>
@@ -26,7 +26,7 @@
 	<body>
 		<scene>
 			<mesh id="earth" geo="#g" mtl="#m" style="scaleX: -1;"/>
-            <mmd model='asset/Tda/Miku.pmx' motion="https://mitsuhide.jthird.net/share/pokky/motion/melt/melt.vmd"/>
+            <mmd model='asset/Tda/Miku.pmx' motion="asset/world.vmd"/>
             <mesh id="title" geo="#textGeo" mtl="#textMtl" style="positionY: 23;"/>
 			    
 

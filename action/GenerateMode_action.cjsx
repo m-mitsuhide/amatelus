@@ -45,39 +45,64 @@ module.exports = {
       type: "switchPreview",
       value: bool
     }
+  reloadViewer: ( id )->
+
+    json = JSON.parse fs.readFileSync "./asset/template/" + id + "/data.json", "utf-8"
+
+
+    ["goml","html","css","js"].forEach ( ext )=>
+      text = fs.readFileSync "./asset/template/" + id + "/index." + ext, "utf-8"
+
+      json[ ext ].forEach ( data )=>
+        text = text.replace data.tag, data.value || data.default || ""
+
+      text = text.replace /(["'])\/share\//g, "$1https://mitsuhide.jthird.net/share/"
+
+      fs.writeFileSync "./asset/template/" + id + "/preview/index." + ext, text
+
+    {
+      type: "reloadViewer"
+      value: "http://localhost:1337/" + id + "/?" + Date.now()
+    }
 
   saveDropData: ( list, templateId )->
-
     json = { goml: [], html: [], css: [], js: []}
 
     list.forEach ( data, idx )->
       tmp = {
         tag: data._tag
-        type: null
+        type: data.type
         value: null
       }
+
+      if data.default then tmp.default = data.default
 
       json[ data._ext ].push tmp
 
       if data.value
         if typeof data.value == "string"
-          tmp.type = "text"
           tmp.value = data.value
         else
-          tmp.value = []
 
-          data.value.forEach ( file )->
-            tmp.value.push "asset/" + file.name
-            reader = new FileReader();
-            reader.onload = (e)->
-              buf = new Buffer(e.target.result.byteLength);
-              source = new Uint8Array(e.target.result);
-              for i in [0..e.target.result.byteLength]
-                buf[i] = source[i];
-              fs.writeFile "./asset/template/" + templateId + "/preview/asset/" + file.name, buf
-            reader.readAsArrayBuffer file
+          if data.type == "dir"
+            tmp.value = "asset/" + data._returned
+            fs.copySync data.value[ 0 ].path.split( "/" ).slice( 0, -1 ).join( "/" ), "./asset/template/" + templateId + "/preview/asset/" + data._returned.split( "/" )[ 0 ]
+          else
+            tmp.value = []
+            data.value.forEach ( file )->
+              tmp.value.push "asset/" + file.name
+              reader = new FileReader();
+              reader.onload = (e)->
+                buf = new Buffer(e.target.result.byteLength);
+                source = new Uint8Array(e.target.result);
+                for i in [0..e.target.result.byteLength]
+                  buf[i] = source[i];
+                fs.writeFile "./asset/template/" + templateId + "/preview/asset/" + file.name, buf
+              reader.readAsArrayBuffer file
 
-          tmp.type = "file"
+            if data.type == "file"
+              tmp.value = tmp.value[ 0 ]
+
 
     fs.writeFile "./asset/template/" + templateId + "/data.json", JSON.stringify json
 

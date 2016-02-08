@@ -50,11 +50,8 @@ class Preview extends React.Component
       <CloseBack onClose={@onClose}/>
       {
         if @state.generated
-          <webview disablewebsecurity src={"http://localhost:1337/" + @props.templateId + "/"} allowTransparency="true"/>
+          <webview src={"http://localhost:1337/" + @props.templateId + "/"} allowTransparency="true"/>
       }
-      <div className="buttons">
-        <RaisedButton primary={true} label="Generate" onClick={@props.onGenerate}/>
-      </div>
       <Style type="Preview"/>
     </div>
 

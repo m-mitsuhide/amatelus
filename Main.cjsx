@@ -74,7 +74,9 @@ class MainComponent extends React.Component
     <div>
       {
         if @state.userName
-          <AppBar onLeftIconButtonTouchTap={()->store.dispatch action.goTop()} title={@state.userName}/>
+          <div id="header">
+            <img className="logo" src="./img/logo.png" onClick={()->store.dispatch action.goTop()}/>
+          </div>
       }
       {
         if @state.userName

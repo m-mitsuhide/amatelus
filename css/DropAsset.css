@@ -53,7 +53,7 @@
     font-size: 0; }
 #DropAsset .snippet {
   position: fixed;
-  top: 64px;
+  top: 0;
   bottom: 0;
   left: 0;
   width: 100%;

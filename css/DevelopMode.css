@@ -1,6 +1,6 @@
 #DevelopMode {
   position: fixed;
-  top: 64px;
+  top: 60px;
   left: 0;
   right: 0;
   bottom: 0; }
@@ -26,21 +26,23 @@
         display: block;
         opacity: 0;
         cursor: pointer; }
+  #DevelopMode .droper {
+    position: absolute;
+    top: 0;
+    left: 70%;
+    right: 0;
+    bottom: 0;
+    margin-left: 30px;
+    border-left: 1px solid #ccc; }
   #DevelopMode .paper {
     position: absolute; }
+    #DevelopMode .paper > div {
+      height: 100%; }
     #DevelopMode .paper.editor {
       top: 100px;
       left: 15px;
       right: 30%;
       bottom: 15px; }
-    #DevelopMode .paper.droper {
-      top: 15px;
-      left: 70%;
-      right: 15px;
-      bottom: 15px;
-      margin-left: 20px; }
-    #DevelopMode .paper > div {
-      height: 100%; }
     #DevelopMode .paper .ace_editor {
       position: absolute;
       top: 48px;

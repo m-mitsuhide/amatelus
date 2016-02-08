@@ -4,6 +4,7 @@ jThree( function( j3 ) {
 
 	j3.Orbit();
 	j3.MMD.play();
+	j3.MMD.edgeScale = 0;
 
 
 	function rotateEarth() {

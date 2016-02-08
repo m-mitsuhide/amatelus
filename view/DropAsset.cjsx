@@ -177,7 +177,6 @@ class DropAsset extends React.Component
           <div className="snippet">
             <CloseBack onClose={()->store.dispatch action.createSnippet false}/>
             <Paper className="frame" zDepth={2}>
-              <AppBar iconElementLeft={<span/>} title="Generate snippet" />
               <div className="input-area">
                 <SelectField value={@state.snippetType} onChange={(event, idx, val)->store.dispatch action.changeSnippetType val}>
                   <MenuItem value="text" primaryText="Text"/>

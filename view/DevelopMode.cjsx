@@ -131,7 +131,7 @@ class DevelopMode extends React.Component
   componentWillUnmount: ()->
     fs.emptyDir "./asset/template/" + @state.templateId + "/preview/asset/", ()->
       return
-      
+
     json = JSON.parse fs.readFileSync "./asset/template/" + @state.templateId + "/data.json"
     for key, val of json
       val.forEach ( obj )->
@@ -140,6 +140,11 @@ class DevelopMode extends React.Component
 
 
   render:()->
+    tabStyle = [
+      {background: "#fafafa", color: "#999"}
+      {background: "#fff", color: "#333"}
+    ]
+
     <div id="DevelopMode">
       <div className="title">
         <div className="thumbnail">
@@ -161,16 +166,16 @@ class DevelopMode extends React.Component
       <div className="paper editor">
         <Paper zDepth={2}>
           <Tabs value={@state.currentTab}>
-            <Tab label={"GOML" + if @state.saved.goml == false then "*" else ""} value="goml" onClick={()->store.dispatch action.changeTab "goml"}>
+            <Tab style={tabStyle[ +(@state.currentTab == "goml") ] } label={"GOML" + if @state.saved.goml == false then "*" else ""} value="goml" onClick={()->store.dispatch action.changeTab "goml"}>
               <div/>
             </Tab>
-            <Tab label={"HTML" + if @state.saved.html == false then "*" else ""} value="html" onClick={()->store.dispatch action.changeTab "html"}>
+            <Tab style={tabStyle[ +(@state.currentTab == "html") ] } label={"HTML" + if @state.saved.html == false then "*" else ""} value="html" onClick={()->store.dispatch action.changeTab "html"}>
               <div/>
             </Tab>
-            <Tab label={"CSS" + if @state.saved.css == false then "*" else ""} value="css" onClick={()->store.dispatch action.changeTab "css"}>
+            <Tab style={tabStyle[ +(@state.currentTab == "css") ] } label={"CSS" + if @state.saved.css == false then "*" else ""} value="css" onClick={()->store.dispatch action.changeTab "css"}>
               <div/>
             </Tab>
-            <Tab label={"JS" + if @state.saved.js == false then "*" else ""} value="js" onClick={()->store.dispatch action.changeTab "js"}>
+            <Tab style={tabStyle[ +(@state.currentTab == "js") ] } label={"JS" + if @state.saved.js == false then "*" else ""} value="js" onClick={()->store.dispatch action.changeTab "js"}>
               <div/>
             </Tab>
           </Tabs>
@@ -244,13 +249,11 @@ class DevelopMode extends React.Component
         </Paper>
       </div>
 
-      <div className="paper droper">
-        <Paper zDepth={2}>
+      <div className="droper">
           <DropAsset templateId={@props.templateId} mode="develop"
             onInsert={@insertSnippet}
             onPreview={()->store.dispatch action.switchPreview true}
             onChange={(data)=>store.dispatch action.saveDropData data, @props.templateId}/>
-        </Paper>
       </div>
       {
         if @state.onPreview

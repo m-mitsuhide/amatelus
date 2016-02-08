@@ -30,16 +30,28 @@ store = Redux.createStore (state,action)->
         currentTab: "goml",
         saved: {},
         onPreview: false
+        templateListArr: JSON.parse fs.readFileSync "./asset/template/list.json"
+        templateList: {}
+        currentTemplate: {}
+        viewSrc: ""
       }
+
+      state.templateListArr.forEach ( list )->
+        state.templateList[ list.id ] = list
 
   else if action.type == "setTemplateId"
     state = Object.assign( {}, state, {
       templateId: action.templateId,
       worksArr: fs.readdirSync "./public/" + action.templateId
+      currentTemplate: state.templateList[ action.templateId ]
     } )
 
   else if action.type == "saved"
     state.saved[ action.ext ] = true
+  else if action.type == "reloadViewer"
+    state = Object.assign {}, state, {
+      viewSrc: action.value
+      }
 
   else if action.type == "switchPreview"
     state = Object.assign( {}, state, {
@@ -62,29 +74,30 @@ class GenerateMode extends React.Component
   constructor:(props)->
     super props
     @state = store.getState()
-    store.dispatch action.setTemplateId props.templateId, ( data )->
-      store.dispatch action.setSource data
+    store.dispatch action.setTemplateId props.templateId
 
     store.subscribe ()=>
       @updateState()
 
 
+
   render:()->
     <div id="GenerateMode">
 
-      <div className="paper droper">
-        <Paper zDepth={2}>
+      <div className="droper">
           <DropAsset templateId={@props.templateId}
-            onPreview={()->store.dispatch action.switchPreview true}
+            onPreview={()=>store.dispatch action.reloadViewer @props.templateId}
             onChange={(data)=>store.dispatch action.saveDropData data, @props.templateId}/>
-        </Paper>
       </div>
-      <div className="paper works">
-        {
-          @state.worksArr.map (name, idx)->
-            <div key={idx}></div>
-        }
+      <div className="result">
+        <div className="device">
+          <img className="phone" src="./img/iphone.png"/>
+          <div className="viewer">
+            <webview src={@state.viewSrc} allowTransparency="true"/>
+          </div>
+        </div>
       </div>
+
       {
         if @state.onPreview
           <Preview templateId={@props.templateId}
