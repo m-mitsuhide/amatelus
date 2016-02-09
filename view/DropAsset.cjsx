@@ -149,8 +149,8 @@ class DropAsset extends React.Component
                       <FileDropper index={idx} type={item.type} onChange={props.onChange}/>
                     when "color"
                       <ColorPicker index={idx} onChange={props.onChange}/>
-                    when "dir"
-                      <DirSelector index={idx} type="dir" onChange={props.onChange}/>
+                    when "folder"
+                      <DirSelector index={idx} type="folder" onChange={props.onChange}/>
                 }
                 {
                   if item.type != "text"
@@ -183,7 +183,7 @@ class DropAsset extends React.Component
                   <MenuItem value="color" primaryText="Color"/>
                   <MenuItem value="file" primaryText="File"/>
                   <MenuItem value="files" primaryText="Files"/>
-                  <MenuItem value="dir" primaryText="Dir"/>
+                  <MenuItem value="folder" primaryText="Folder"/>
                 </SelectField>
 
                 <TextField errorText={@state.error_snippetTitle} onInput={
@@ -343,7 +343,7 @@ class FileDropper extends React.Component
   onChange: (e)=>
     files = []
 
-    if @props.type == "dir"
+    if @props.type == "folder"
       path = e.target.files[ 0 ].path
       dirName = path.split( "/" ).pop()
       fs.readdirSync( path ).forEach ( name )->
@@ -364,7 +364,7 @@ class FileDropper extends React.Component
     list = store.getState().listArr
     list[ index ].value = files
 
-    if @props.type != "dir"
+    if @props.type != "folder"
       list[ index ]._returned = files.map( ( file )->
         file.name ).join ","
     else
@@ -377,7 +377,7 @@ class FileDropper extends React.Component
 
   componentDidMount: ()->
     input = ReactDOM.findDOMNode @refs.customAttributes
-    if @props.type == "dir"
+    if @props.type == "folder"
       input.setAttribute('webkitdirectory', '')
       input.setAttribute('directory', '')
     else

@@ -3,7 +3,7 @@ jThree( function( j3 ) {
 	$( "#loading" ).remove();
 
 	j3.Orbit();
-	j3.MMD.play();
+	j3.MMD.play( true );
 	j3.MMD.edgeScale = 0;
 
 

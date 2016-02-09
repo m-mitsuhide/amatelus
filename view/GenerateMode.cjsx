@@ -41,13 +41,15 @@ store = Redux.createStore (state,action)->
 
   else if action.type == "setTemplateId"
     state = Object.assign( {}, state, {
-      templateId: action.templateId,
+      templateId: action.templateId
+      viewSrc: ""
       worksArr: fs.readdirSync "./public/" + action.templateId
       currentTemplate: state.templateList[ action.templateId ]
     } )
 
   else if action.type == "saved"
     state.saved[ action.ext ] = true
+
   else if action.type == "reloadViewer"
     state = Object.assign {}, state, {
       viewSrc: action.value
@@ -78,8 +80,6 @@ class GenerateMode extends React.Component
 
     store.subscribe ()=>
       @updateState()
-
-
 
   render:()->
     <div id="GenerateMode">

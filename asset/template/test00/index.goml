@@ -10,7 +10,7 @@
 		<import>
 		    <style>
 		        #title {
-		            color: <% index="4" type="color" title="文字の色" default="#f00" %>;
+		            color: <% index="8" type="color" title="moziColor" %>;
 		            position: absolute;
 		            top: 0;
 		            height: 120px;
@@ -18,7 +18,7 @@
 		            text-align: center;
 		        }
 		    </style>
-		    <div id="title"><% index="3" type="text" default="ミクダヨー" title="文字が浮かぶよ"%></div>
+		    <div id="title"><% index="7" type="text" title="mozi" %></div>
 		</import>
 
 		<rdr frame="#jthree" camera="camera:first" param="preserveDrawingBuffer: true; antialias: true; clearColor: #fff;"/>
@@ -26,7 +26,7 @@
 	<body>
 		<scene>
 			<mesh id="earth" geo="#g" mtl="#m" style="scaleX: -1;"/>
-            <mmd model='<% index="5" type="dir" title="PMX" default="/share/animasa/model/miku/miku.pmx" %>' motion="<% index="6" type="file" title="Motion" %>"/>
+            <mmd model='<% index="5" type="folder" title="3Dモデル" default="/share/animasa/model/miku/miku.pmx" %>' motion="<% index="6" type="file" title="motion" %>"/>
             <mesh id="title" geo="#textGeo" mtl="#textMtl" style="positionY: 23;"/>
 			    
 

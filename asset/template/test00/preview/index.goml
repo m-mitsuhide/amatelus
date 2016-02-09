@@ -10,7 +10,7 @@
 		<import>
 		    <style>
 		        #title {
-		            color: #f00;
+		            color: #f44e3b;
 		            position: absolute;
 		            top: 0;
 		            height: 120px;
@@ -18,7 +18,7 @@
 		            text-align: center;
 		        }
 		    </style>
-		    <div id="title">ミクダヨー</div>
+		    <div id="title">amatelus</div>
 		</import>
 
 		<rdr frame="#jthree" camera="camera:first" param="preserveDrawingBuffer: true; antialias: true; clearColor: #fff;"/>

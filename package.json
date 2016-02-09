@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/atom/electron-quick-start#readme",
   "devDependencies": {
+    "brace": "^0.7.0",
     "coffee-react": "^4.1.0",
     "electron-connect": "^0.3.4",
     "electron-prebuilt": "^0.36.0",
