@@ -1,5 +1,6 @@
 fs = require "fs-extra"
 ps = require "../js/pubsub.js"
+delimiter = require "../js/delimiter.js"
 
 module.exports = {
   setTemplateId: ( templateId, onLoad )->
@@ -96,7 +97,7 @@ module.exports = {
 
           if data.type == "folder"
             tmp.value = "asset/" + data._returned
-            fs.copySync data.value[ 0 ].path.split( "/" ).slice( 0, -1 ).join( "/" ), "./asset/template/" + templateId + "/preview/asset/" + data._returned.split( "/" )[ 0 ]
+            fs.copySync data.value[ 0 ].path.split( delimiter ).slice( 0, -1 ).join( "/" ), "./asset/template/" + templateId + "/preview/asset/" + data._returned.split( "/" )[ 0 ]
           else
             tmp.value = []
             data.value.forEach ( file )->

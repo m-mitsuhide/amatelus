@@ -13,7 +13,7 @@ action = require "../action/DropAsset_action.cjsx"
 fs = require "fs"
 
 ps = require "../js/pubsub.js"
-
+delimiter = require "../js/delimiter.js"
 
 TextField = MUI.TextField
 AppBar = MUI.AppBar
@@ -345,7 +345,7 @@ class FileDropper extends React.Component
 
     if @props.type == "folder"
       path = e.target.files[ 0 ].path
-      dirName = path.split( "/" ).pop()
+      dirName = path.split( delimiter ).pop()
       fs.readdirSync( path ).forEach ( name )->
         files.push {
           name: name
@@ -371,7 +371,7 @@ class FileDropper extends React.Component
       tmp = files.filter ( file )->
         if /\.(x|pmx|obj|dae|json)$/.test file.name then file.name
 
-      list[ index ]._returned = files[ 0 ].path.split( "/" ).slice( -2, -1 )[ 0 ] + "/" + ( if tmp.length then tmp[ 0 ].name else files[ 0 ].name )
+      list[ index ]._returned = files[ 0 ].path.split( delimiter ).slice( -2, -1 )[ 0 ] + "/" + ( if tmp.length then tmp[ 0 ].name else files[ 0 ].name )
 
     @props.onChange list
 
