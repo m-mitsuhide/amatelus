@@ -108,9 +108,9 @@ ps.sub "DevelopMode.save", ( ctx, data )->
 class DevelopMode extends React.Component
   constructor:(props)->
     super props
-    @state = store.getState()
     store.dispatch action.setTemplateId props.templateId, ( data )->
       store.dispatch action.setSource data
+    @state = store.getState()
 
     store.subscribe ()=>
       @updateState()

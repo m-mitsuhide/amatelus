@@ -41,11 +41,6 @@ module.exports = {
       name
     }
 
-  switchPreview: ( bool )->
-    {
-      type: "switchPreview",
-      value: bool
-    }
   reloadViewer: ( id )->
 
     json = JSON.parse fs.readFileSync "./asset/template/" + id + "/data.json", "utf-8"
@@ -112,5 +107,16 @@ module.exports = {
       type: "saveDropData"
     }
 
+  rotation: ( bool, store )->
+    setTimeout ()->
+      store.dispatch {
+        type: "rotationEnd"
+      }
+    , 300
+
+    {
+      type: "rotation"
+      value: !bool
+    }
 
 }

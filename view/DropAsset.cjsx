@@ -19,6 +19,7 @@ TextField = MUI.TextField
 AppBar = MUI.AppBar
 Paper = MUI.Paper
 RaisedButton = MUI.RaisedButton
+FlatButton = MUI.FlatButton
 FloatingActionButton = MUI.FloatingActionButton
 ToggleStar = MUI.ToggleStar
 AddBtn = require 'react-material-icons/icons/content/add'
@@ -113,9 +114,9 @@ store = Redux.createStore (state,action)->
 class DropAsset extends React.Component
   constructor:(props)->
     super props
-    @state = store.getState()
     store.dispatch action.setTemplateId props.templateId, ( data )->
       store.dispatch action.setList data
+    @state = store.getState()
 
     ps.sub "DevelopMode.save", @saved
     store.subscribe ()=>
@@ -161,11 +162,11 @@ class DropAsset extends React.Component
             </div>
         }
       </div>
-      <RaisedButton onClick={@props.onPreview} primary={true} style={{position: "absolute", bottom: 10, right: 10, left: 10 }} label="Preview"/>
+      <FlatButton onClick={@props.onPreview} primary={true} style={{position: "absolute", bottom: 0, width: "100%", padding: 10 }} label="Preview"/>
       <Style type="DropAsset"/>
       {
         if @props.mode == "develop"
-          <FloatingActionButton style={{position: "absolute", bottom: 65, right: 10}} primary={true} onClick={
+          <FloatingActionButton style={{position: "absolute", bottom: 10, right: 10}} primary={true} onClick={
             ()->store.dispatch action.createSnippet true
             }>
             <AddBtn/>

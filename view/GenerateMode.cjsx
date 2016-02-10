@@ -15,6 +15,10 @@ ps = require "../js/pubsub.js"
 
 
 Paper = MUI.Paper
+RaisedButton = MUI.RaisedButton
+FlatButton = MUI.FlatButton
+IconButton = MUI.IconButton
+ScreenRotation = require 'react-material-icons/icons/device/screen-rotation'
 
 store = Redux.createStore (state,action)->
   if typeof state == 'undefined'
@@ -23,17 +27,18 @@ store = Redux.createStore (state,action)->
       state = JSON.parse( savedState )
     else
       state = {
-        templateId: null,
-        source: {},
-        editorHash: {},
-        worksArr: [],
-        currentTab: "goml",
-        saved: {},
-        onPreview: false
+        templateId: null
+        source: {}
+        editorHash: {}
+        worksArr: []
+        currentTab: "goml"
+        saved: {}
         templateListArr: JSON.parse fs.readFileSync "./asset/template/list.json"
         templateList: {}
         currentTemplate: {}
         viewSrc: ""
+        rotation: false
+        isLandscape: false
       }
 
       state.templateListArr.forEach ( list )->
@@ -43,22 +48,26 @@ store = Redux.createStore (state,action)->
     state = Object.assign( {}, state, {
       templateId: action.templateId
       viewSrc: ""
+      rotation: false
+      isLandscape: false
       worksArr: fs.readdirSync "./public/" + action.templateId
       currentTemplate: state.templateList[ action.templateId ]
     } )
 
-  else if action.type == "saved"
-    state.saved[ action.ext ] = true
+  else if action.type == "rotation"
+    state = Object.assign {}, state, {
+      rotation: action.value
+      }
+
+  else if action.type == "rotationEnd"
+    state = Object.assign {}, state, {
+      isLandscape: state.rotation
+      }
 
   else if action.type == "reloadViewer"
     state = Object.assign {}, state, {
       viewSrc: action.value
       }
-
-  else if action.type == "switchPreview"
-    state = Object.assign( {}, state, {
-      onPreview: action.value
-      })
 
   else if action.type == "generate"
     state = Object.assign( {}, state )
@@ -75,8 +84,8 @@ ps.sub "GenerateMode.save", ( ctx, data )->
 class GenerateMode extends React.Component
   constructor:(props)->
     super props
-    @state = store.getState()
     store.dispatch action.setTemplateId props.templateId
+    @state = store.getState()
 
     store.subscribe ()=>
       @updateState()
@@ -90,21 +99,17 @@ class GenerateMode extends React.Component
             onChange={(data)=>store.dispatch action.saveDropData data, @props.templateId}/>
       </div>
       <div className="result">
-        <div className="device">
+        <div className={ "device" + ( if @state.rotation then " rotation" else "")}>
           <img className="phone" src="./img/iphone.png"/>
-          <div className="viewer">
+          <div className={ "viewer" + ( if @state.isLandscape then " landscape" else "")}>
             <webview src={@state.viewSrc} allowTransparency="true"/>
           </div>
         </div>
+        <IconButton onClick={()=>store.dispatch action.rotation @state.rotation, store} style={{position: "absolute", top: 5, left: 5}}>
+          <ScreenRotation/>
+        </IconButton>
+        <FlatButton onClick={@props.onPreview} primary={true} style={{position: "absolute", bottom: 0, width: "100%", height: 57, borderTop: "1px solid #eee" }} label="Generate"/>
       </div>
-
-      {
-        if @state.onPreview
-          <Preview templateId={@props.templateId}
-            onClose={()->store.dispatch action.switchPreview false}
-            onGenerate={()=>store.dispatch action.generate @props.templateId}
-          />
-      }
 
       <Style type="GenerateMode"/>
     </div>

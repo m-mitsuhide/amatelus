@@ -19,15 +19,20 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    right: 0;
+    right: 20%;
     left: 30%;
+    border-right: 1px solid #ccc;
 
     .device {
       position: absolute;
-      width: 30%;
+      width: 40%;
       top: 50%;
       left: 50%;
-      transform: translate( -50%, -50% );
+      transform: translate( -50%, -50% ) rotateZ( 0deg );
+      transition: .3s transform ease;
+      &.rotation {
+        transform: translate( -50%, -50% ) rotateZ( -90deg );
+      }
     }
     .phone {
       width: 100%;
@@ -40,6 +45,13 @@
       right: 6.2%;
       background: center;
       background-size: cover;
+      &.landscape {
+        top: 29%;
+        bottom: 29%;
+        right: -28%;
+        left: -28%;
+        transform: rotateZ( 90deg );
+      }
     }
   }
 }

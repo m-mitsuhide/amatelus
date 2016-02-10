@@ -15,14 +15,18 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    right: 0;
-    left: 30%; }
+    right: 20%;
+    left: 30%;
+    border-right: 1px solid #ccc; }
     #GenerateMode .result .device {
       position: absolute;
-      width: 30%;
+      width: 40%;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%); }
+      transform: translate(-50%, -50%) rotateZ(0deg);
+      transition: .3s transform ease; }
+      #GenerateMode .result .device.rotation {
+        transform: translate(-50%, -50%) rotateZ(-90deg); }
     #GenerateMode .result .phone {
       width: 100%; }
     #GenerateMode .result .viewer {
@@ -33,3 +37,9 @@
       right: 6.2%;
       background: center;
       background-size: cover; }
+      #GenerateMode .result .viewer.landscape {
+        top: 29%;
+        bottom: 29%;
+        right: -28%;
+        left: -28%;
+        transform: rotateZ(90deg); }
