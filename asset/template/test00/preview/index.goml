@@ -26,7 +26,7 @@
 	<body>
 		<scene>
 			<mesh id="earth" geo="#g" mtl="#m" style="scaleX: -1;"/>
-            <mmd model='asset/Tda/Miku.pmx' motion=""/>
+            <mmd model='asset/TdaMiku/Tda式初音ミク・アペンド_Ver1.00_ボーン未改造.pmx' motion="asset/world.vmd"/>
             <mesh id="title" geo="#textGeo" mtl="#textMtl" style="positionY: 23;"/>
 			    
 

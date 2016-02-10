@@ -16,6 +16,7 @@ let mainWindow;
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600});
+  mainWindow.setMenu( null );
 
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/index.html');
@@ -135,7 +136,7 @@ server.on('request',
               }
             })
         } else {
-          fs.readFile('asset/template/' + templateId + "/preview" + requestedFile.split(templateId)[1],'binary', function (err, data) {
+          fs.readFile('asset/template/' + templateId + "/preview" + decodeURIComponent( requestedFile.split(templateId)[1] ),'binary', function (err, data) {
               if(err){
                   response.writeHead(404, {'Content-Type': 'text/plain'});
                   response.write('not found\n');

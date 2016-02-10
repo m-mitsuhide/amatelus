@@ -349,7 +349,7 @@ class FileDropper extends React.Component
       fs.readdirSync( path ).forEach ( name )->
         files.push {
           name: name
-          path: path + "/" + name
+          path: path + delimiter + name
         }
     else
       Array.prototype.forEach.call e.target.files, ( file )->
