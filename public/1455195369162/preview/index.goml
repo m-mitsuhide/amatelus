@@ -1,7 +1,7 @@
 <goml>
 	<head>
 		<geo id="g" type="Sphere" param="300 64 64" />
-		<txr id="t" src='https://mitsuhide.jthird.net/share/Mitsuhide/img/sky.png'/>
+		<txr id="t" src='asset/R0010232.JPG'/>
 		<mtl id="m" type="MeshBasic" param="map: #t;" />
 		
 		<txr id="textTxr" html="div"/>
@@ -10,7 +10,7 @@
 		<import>
 		    <style>
 		        #title {
-		            color: ;
+		            color: #f44e3b;
 		            position: absolute;
 		            top: 0;
 		            height: 120px;
@@ -18,7 +18,7 @@
 		            text-align: center;
 		        }
 		    </style>
-		    <div id="title">aa</div>
+		    <div id="title">AMATELUS!</div>
 		</import>
 
 		<rdr frame="#jthree" camera="camera:first" param="preserveDrawingBuffer: true; antialias: true; clearColor: #fff;"/>
@@ -26,7 +26,7 @@
 	<body>
 		<scene>
 			<mesh id="earth" geo="#g" mtl="#m" style="scaleX: -1;"/>
-            <mmd model='https://mitsuhide.jthird.net/share/milbox/九十九みる/TsukumoMil_mmd.pmx' motion=""/>
+            <mmd model='asset/Tda/Miku.pmx' motion="asset/world.vmd"/>
             <mesh id="title" geo="#textGeo" mtl="#textMtl" style="positionY: 23;"/>
 			    
 

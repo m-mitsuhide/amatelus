@@ -41,6 +41,12 @@ module.exports = {
       type: "generate"
     }
 
+  toggleQR: ( value ) ->
+    {
+      type: "toggleQR"
+      value
+    }
+
   reloadViewer: ( id )->
 
     json_path = "./public/" + id + "/preview/data.json"

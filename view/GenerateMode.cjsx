@@ -8,6 +8,8 @@ Loading = require "./Loading.cjsx"
 CloseBack = require "./CloseBack.cjsx"
 DropAsset = require "./DropAsset.cjsx"
 TitleArea = require "./TitleArea.cjsx"
+archiver = require "archiver"
+QRcode = require 'qrcode.react'
 
 action = _action = require "../action/GenerateMode_action.cjsx"
 fs = require "fs-extra"
@@ -23,6 +25,8 @@ IconButton = MUI.IconButton
 ScreenRotation = require 'react-material-icons/icons/device/screen-rotation'
 FullScreen = require 'react-material-icons/icons/image/crop-free'
 
+ShareBtn = require 'react-material-icons/icons/social/share'
+
 store = Redux.createStore (state,action)->
   if typeof state == 'undefined'
 
@@ -36,6 +40,7 @@ store = Redux.createStore (state,action)->
       viewSrc: ""
       rotation: false
       isLandscape: false
+      showQR: false
     }
 
     state.templateListArr.forEach ( list )->
@@ -78,6 +83,12 @@ store = Redux.createStore (state,action)->
   else if action.type == "offViewer"
     state = Object.assign {}, state, {
       viewSrc: ""
+      rotation: false
+      }
+
+  else if action.type == "toggleQR"
+    state = Object.assign {}, state, {
+      showQR: action.value
       }
 
   else if action.type == "changeTitle"
@@ -128,7 +139,7 @@ store = Redux.createStore (state,action)->
       canvas = document.getElementById( "iframe" ).contentDocument.getElementsByTagName( "canvas" )[ 0 ]
       if canvas
          png = canvas.toDataURL().replace /^data:image\/png;base64,/, ""
-         fs.unlink "./public/" + state.templateId + "/" + state.publicId + "/" + state.publicList[ state.publicId ].thumbnail
+         state.publicList[ state.publicId ].thumbnail && fs.unlink "./public/" + state.templateId + "/" + state.publicId + "/" + state.publicList[ state.publicId ].thumbnail
          imgName = Date.now() + ".b64"
          fs.writeFileSync "./public/" + state.templateId + "/preview/" + imgName, png, 'base64'
          fs.writeFileSync "./public/" + state.templateId + "/" + state.publicId + "/" + imgName, png, 'base64'
@@ -138,6 +149,39 @@ store = Redux.createStore (state,action)->
          fs.writeFile "./public/" + state.templateId + "/list.json", JSON.stringify state.publicListArr
 
 
+    archive = archiver.create 'zip', {}
+    zip_name = "./zip_tmp/" + state.templateId + state.publicId + ".zip"
+    output = fs.createWriteStream zip_name
+    archive.pipe output
+
+    archive.bulk [
+      {
+        expand:true
+        cwd: "./public/" + state.templateId + "/" + state.publicId
+        src:["**/*"]
+        dot:true
+      }
+    ]
+
+    output.on "close", ()->
+      xhr = new XMLHttpRequest()
+      xhr.open "GET", zip_name, true
+      xhr.responseType = "arraybuffer"
+      xhr.onload = ()->
+
+        data = new FormData()
+        data.append "file", new Blob [ @response ], {type: "application/zip" }
+        data.append "name", "" + state.templateId + state.publicId
+        xhr = new XMLHttpRequest()
+        xhr.open "POST", "http://jthird.net/amtb/works/", true
+        xhr.onload = ()->
+          if @response != "error"
+            store.dispatch _action.toggleQR @response
+        xhr.send data
+
+      xhr.send()
+
+    archive.finalize()
     ###request = ajax.post( path.generate )
     request.field "id", templateId
 
@@ -214,12 +258,21 @@ class GenerateMode extends React.Component
           onChangeTitle={(e)->store.dispatch action.changeTitle e.target.value}
           onChangeThumbnail={@onChangeThumbnail}
         />
-        <IconButton onClick={@fullscreen} style={{position: "absolute", bottom: 105, left: 5}}>
-          <FullScreen color="#666"/>
-        </IconButton>
-        <IconButton onClick={()=>store.dispatch action.rotation @state.rotation, store} style={{position: "absolute", bottom: 62, left: 5}}>
-          <ScreenRotation color="#666"/>
-        </IconButton>
+
+        <div style={{display: if @state.publicId == "preview" then "none" else "block"}}>
+          <IconButton onClick={()=>store.dispatch action.toggleQR "http://jthird.net/amtb/works/" + templateId + publicId} style={{position: "absolute", top: 10, right: 10}}>
+            <ShareBtn color="rgb(255, 64, 129)"/>
+          </IconButton>
+        </div>
+
+        <div style={{display: if @state.viewSrc == "" then "none" else "block"}}>
+          <IconButton onClick={@fullscreen} style={{position: "absolute", bottom: 105, left: 5}}>
+            <FullScreen color="#666"/>
+          </IconButton>
+          <IconButton onClick={()=>store.dispatch action.rotation @state.rotation, store} style={{position: "absolute", bottom: 62, left: 5}}>
+            <ScreenRotation color="#666"/>
+          </IconButton>
+        </div>
 
         <div className="generate">
           <FlatButton disabled={@state.viewSrc == ""} onClick={()->store.dispatch action.generate()} primary={true} style={{borderRight: "1px solid #eee"}} label={ if @state.publicId == "preview" then "Generate" else "Update"}/>
@@ -247,6 +300,15 @@ class GenerateMode extends React.Component
             }>
             <AddBtn/>
           </FloatingActionButton>
+      }
+      {
+        if @state.showQR
+          <div className="qrcode">
+            <CloseBack onClose={()->store.dispatch action.toggleQR false}/>
+            <Paper className="frame" zDepth={2}>
+              <QRcode value={@state.showQR} />
+            </Paper>
+          </div>
       }
       <Style type="GenerateMode"/>
     </div>
