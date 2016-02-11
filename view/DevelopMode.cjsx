@@ -8,6 +8,7 @@ Loading = require "./Loading.cjsx"
 CloseBack = require "./CloseBack.cjsx"
 DropAsset = require "./DropAsset.cjsx"
 Preview = require "./Preview.cjsx"
+TitleArea = require "./TitleArea.cjsx"
 
 action = require "../action/DevelopMode_action.cjsx"
 fs = require "fs-extra"
@@ -40,7 +41,6 @@ store = Redux.createStore (state,action)->
         templateId: null
         templateList: []
         currentData: {}
-        error_title: false
         source: {}
         editorHash: {}
         editorArr: []
@@ -59,9 +59,7 @@ store = Redux.createStore (state,action)->
     }
 
   else if action.type == "changeTitle"
-    state = Object.assign {}, state, {
-      error_title: if action.value == "" then "No title" else null
-    }
+    state = Object.assign {}, state
     state.currentData.title = action.value
     fs.writeFile "./asset/template/list.json", JSON.stringify state.templateList
 
@@ -146,23 +144,12 @@ class DevelopMode extends React.Component
     ]
 
     <div id="DevelopMode">
-      <div className="title">
-        <div className="thumbnail">
-          <div style={{ backgroundImage: "url( ./asset/template/" + @state.templateId + "/" + @state.currentData.thumbnail + ")"}}>
-            <input type="file" onChange={@onChangeThumbnail}/>
-          </div>
-        </div>
-        <TextField className="input" errorText={@state.error_title} onChange={
-          (e)->store.dispatch( action.changeTitle( e.target.value ) )
-        } value={@state.currentData.title} hintText="Template Title"
-        style={{
-          fontSize: 20
-          width: 300
-          position: "absolute"
-          top: 5
-          left: 70
-        }} />
-      </div>
+      <TitleArea
+        title={@state.currentData.title}
+        thumbnail={"url( ./asset/template/" + @state.templateId + "/" + @state.currentData.thumbnail + ")"}
+        onChangeTitle={(e)->store.dispatch action.changeTitle e.target.value}
+        onChangeThumbnail={@onChangeThumbnail}
+      />
       <div className="paper editor">
         <Paper zDepth={2}>
           <Tabs value={@state.currentTab}>

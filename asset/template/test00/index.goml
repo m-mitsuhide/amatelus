@@ -26,7 +26,7 @@
 	<body>
 		<scene>
 			<mesh id="earth" geo="#g" mtl="#m" style="scaleX: -1;"/>
-            <mmd model='<% index="5" type="folder" title="3Dモデル" default="/share/milbox/九十九みる/TsukumoMil_mmd.pmx" %>' motion="<% index="6" type="file" title="モーション" default="/share/pokky/motion/melt/melt.vmd" %>"/>
+            <mmd model='<% index="5" type="folder" title="3Dモデル" default="/share/milbox/九十九みる/TsukumoMil_mmd.pmx" %>' motion="<% index="6" type="file" title="モーション" %>"/>
             <mesh id="title" geo="#textGeo" mtl="#textMtl" style="positionY: 23;"/>
 			    
 

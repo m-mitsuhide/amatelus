@@ -23,6 +23,7 @@
       width: 40%;
       top: 50%;
       left: 50%;
+      margin-top: -28px;
       transform: translate(-50%, -50%) rotateZ(0deg);
       transition: .3s transform ease; }
       #GenerateMode .result .device.rotation {
@@ -43,3 +44,51 @@
         right: -28%;
         left: -28%;
         transform: rotateZ(90deg); }
+      #GenerateMode .result .viewer > iframe {
+        width: 100%;
+        height: 100%;
+        border: none; }
+    #GenerateMode .result .generate {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 57px;
+      border-top: 1px solid #eee; }
+      #GenerateMode .result .generate > button {
+        height: 56px;
+        width: 50%;
+        float: left; }
+  #GenerateMode .contents {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 80%;
+    overflow: auto; }
+    #GenerateMode .contents > div {
+      padding: 5px;
+      width: 100%; }
+    #GenerateMode .contents .current {
+      background: #9ff; }
+      #GenerateMode .contents .current .panel {
+        padding-top: 177.77%;
+        cursor: default;
+        opacity: 1; }
+    #GenerateMode .contents .panel {
+      cursor: pointer;
+      padding-top: 100%;
+      position: relative;
+      background-position: center;
+      background-size: cover;
+      transition: 0.3s padding-top ease;
+      opacity: 0.7; }
+      #GenerateMode .contents .panel:hover {
+        opacity: 1; }
+      #GenerateMode .contents .panel > div {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 10px 5px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 70%, transparent 100%);
+        color: #fff;
+        box-sizing: border-box; }

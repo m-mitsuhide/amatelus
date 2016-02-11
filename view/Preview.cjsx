@@ -6,7 +6,6 @@ request = require "superagent"
 apiPath = require "../config.js"
 Loading = require "./Loading.cjsx"
 CloseBack = require "./CloseBack.cjsx"
-action = require "../action/Preview_action.cjsx"
 
 fs = require "fs"
 
@@ -50,7 +49,7 @@ class Preview extends React.Component
       <CloseBack onClose={@onClose}/>
       {
         if @state.generated
-          <webview src={"http://localhost:1337/" + @props.templateId + "/"} allowTransparency="true"/>
+          <webview src={"http://localhost:1337/develop/" + @props.templateId + "/"} allowTransparency="true"/>
       }
       <Style type="Preview"/>
     </div>

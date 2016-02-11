@@ -17,33 +17,33 @@ module.exports = {
       type: "saved",
       ext: data.ext
     }
-  generate: ( templateId ) ->
-    basePath = "./asset/template/" + templateId + "/preview/"
-    name = Date.now()
-    fs.copySync( basePath, './public/' + templateId + "/" + name );
 
-    ###request = ajax.post( path.generate )
-    request.field "id", templateId
-
-    assets = fs.readdirSync( basePath + "asset" );
-
-    assets.forEach ( name, idx )->
-      request.attach idx, basePath + "asset/" + name
-
-    ["goml","html","css","js"].forEach ( ext )->
-      request.field ext, fs.readFileSync( basePath + "/index." + ext )
-
-    request.end (err, res)->
-      console.log err,res.text###
-
+  changeTitle: ( value )->
     {
-      type: "generate",
-      name
+      type: 'changeTitle'
+      value
+    }
+
+  changeThumbnail: ( value )->
+    {
+      type: 'changeThumbnail'
+      value
+    }
+
+  changeContent: ( value )->
+    {
+      type: 'changeContent'
+      value
+    }
+
+  generate: () ->
+    {
+      type: "generate"
     }
 
   reloadViewer: ( id )->
 
-    json = JSON.parse fs.readFileSync "./asset/template/" + id + "/data.json", "utf-8"
+    json = JSON.parse fs.readFileSync "./public/" + id + "/preview/data.json", "utf-8"
 
 
     ["goml","html","css","js"].forEach ( ext )=>
@@ -54,11 +54,16 @@ module.exports = {
 
       text = text.replace /(["'])\/share\//g, "$1https://mitsuhide.jthird.net/share/"
 
-      fs.writeFileSync "./asset/template/" + id + "/preview/index." + ext, text
+      fs.writeFileSync "./public/" + id + "/preview/index." + ext, text
 
     {
       type: "reloadViewer"
-      value: "http://localhost:1337/" + id + "/?" + Date.now()
+      value: "http://localhost:1337/generate/" + id + "/?" + Date.now()
+    }
+
+  offViewer: ()->
+    {
+      type: "offViewer"
     }
 
   saveDropData: ( list, templateId )->
@@ -82,7 +87,7 @@ module.exports = {
 
           if data.type == "folder"
             tmp.value = "asset/" + data._returned
-            fs.copySync data.value[ 0 ].path.split( delimiter ).slice( 0, -1 ).join( "/" ), "./asset/template/" + templateId + "/preview/asset/" + data._returned.split( "/" )[ 0 ]
+            fs.copySync data.value[ 0 ].path.split( delimiter ).slice( 0, -1 ).join( "/" ), "./public/" + templateId + "/preview/asset/" + data._returned.split( "/" )[ 0 ]
           else
             tmp.value = []
             data.value.forEach ( file )->
@@ -93,16 +98,15 @@ module.exports = {
                 source = new Uint8Array(e.target.result);
                 for i in [0..e.target.result.byteLength]
                   buf[i] = source[i];
-                fs.writeFile "./asset/template/" + templateId + "/preview/asset/" + file.name, buf
+                fs.writeFile "./public/" + templateId + "/preview/asset/" + file.name, buf
               reader.readAsArrayBuffer file
 
             if data.type == "file"
               tmp.value = tmp.value[ 0 ]
 
 
-    fs.writeFile "./asset/template/" + templateId + "/data.json", JSON.stringify json
+    fs.writeFile "./public/" + templateId + "/preview/data.json", JSON.stringify json
 
-    #console.log(id,data,"saveDropData")
     {
       type: "saveDropData"
     }

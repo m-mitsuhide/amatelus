@@ -109,7 +109,8 @@ server.on('request',
     function(request, response){
 
         var requestedFile = url.parse(request.url,true).pathname;
-        var templateId = requestedFile.split("/")[1];
+        var templateId = requestedFile.split("/")[2];
+        var mode = requestedFile.split("/")[1];
 
         requestedFile = (requestedFile.split("").pop() === '/')
 ? requestedFile + DEFAULT_FILE : requestedFile;
@@ -136,7 +137,7 @@ server.on('request',
               }
             })
         } else {
-          fs.readFile('asset/template/' + templateId + "/preview" + decodeURIComponent( requestedFile.split(templateId)[1] ),'binary', function (err, data) {
+          fs.readFile( ( mode === "develop" ? 'asset/template/' : "public/" ) + templateId + "/preview" + decodeURIComponent( requestedFile.split(templateId)[1] ),'binary', function (err, data) {
               if(err){
                   response.writeHead(404, {'Content-Type': 'text/plain'});
                   response.write('not found\n');

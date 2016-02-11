@@ -10,7 +10,8 @@ module.exports = {
       thumbnail: "default.jpg"
       title: "New Template"
     }
-    fs.writeFileSync "./asset/template/list.json", JSON.stringify json
-    fs.mkdirSync "./public/" + hash
+    fs.writeJsonSync "./asset/template/list.json", json
+    fs.mkdirsSync "./public/" + hash + "/preview/asset"
+    fs.writeJsonSync "./public/" + hash + "/list.json", []
     onSelect hash
 }
