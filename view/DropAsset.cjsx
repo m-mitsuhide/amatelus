@@ -21,7 +21,6 @@ Paper = MUI.Paper
 RaisedButton = MUI.RaisedButton
 FlatButton = MUI.FlatButton
 FloatingActionButton = MUI.FloatingActionButton
-ToggleStar = MUI.ToggleStar
 AddBtn = require 'react-material-icons/icons/content/add'
 
 SelectField = MUI.SelectField

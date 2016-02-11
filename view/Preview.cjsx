@@ -49,7 +49,11 @@ class Preview extends React.Component
       <CloseBack onClose={@onClose}/>
       {
         if @state.generated
-          <webview src={"http://localhost:1337/develop/" + @props.templateId + "/"} allowTransparency="true"/>
+          <div className="frame">
+            <div>
+              <iframe id="IFRAME" src={"http://localhost:1337/develop/" + @props.templateId + "/"} allowTransparency="true"/>
+            </div>
+          </div>
       }
       <Style type="Preview"/>
     </div>

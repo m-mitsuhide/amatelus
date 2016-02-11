@@ -17,8 +17,11 @@ IconButton = require 'material-ui/lib/icon-button';
 TextField = MUI.TextField
 Paper = MUI.Paper
 RaisedButton = MUI.RaisedButton
+IconButton = MUI.IconButton
 FloatingActionButton = MUI.FloatingActionButton
-AddBtn = require 'react-material-icons/icons/content/add';
+AddBtn = require 'react-material-icons/icons/content/add'
+DevelopBtn = require 'react-material-icons/icons/action/build'
+GenerateBtn = require 'react-material-icons/icons/editor/mode-edit'
 
 store = Redux.createStore (state,action)->
   if typeof state == 'undefined'
@@ -46,8 +49,16 @@ class ListMode extends React.Component
       {
         @state.templateList.map ( list, idx )->
           <div key={idx} className="panel">
-            <div onClick={()->props.onClick(list.id)} style={{backgroundImage: "url(./asset/template/" + list.id + "/" + list.thumbnail + ")"}}>
-              <div className="title" onClick={(e)->e.stopPropagation();props.onEdit(list.id)}>{list.title}</div>
+            <div style={{backgroundImage: "url(./asset/template/" + list.id + "/" + list.thumbnail + ")"}}>
+              <div className="title">{list.title}</div>
+              <div className="tools">
+                <IconButton onClick={()->props.onEdit(list.id)} tooltip="Develop" touch={true} tooltipPosition="top-center" style={{position: "absolute", top: "50%", left: "35%", transform: "translate( -50%, -50%)"}}>
+                  <DevelopBtn color="#fff"/>
+                </IconButton>
+                <IconButton onClick={()->props.onClick(list.id)} tooltip="Generate" touch={true} tooltipPosition="top-center" style={{position: "absolute", top: "50%", left: "65%", transform: "translate( -50%, -50%)"}}>
+                  <GenerateBtn color="#fff"/>
+                </IconButton>
+              </div>
             </div>
           </div>
       }

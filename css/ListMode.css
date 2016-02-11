@@ -6,13 +6,10 @@
   width: 33.333%;
   float: left; }
   #ListMode .panel > div {
-    cursor: pointer;
     padding-top: 56.25%;
     position: relative;
     background-position: center;
     background-size: cover; }
-    #ListMode .panel > div:hover {
-      opacity: 0.7; }
   #ListMode .panel .title {
     position: absolute;
     bottom: 0;
@@ -21,3 +18,13 @@
     background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 70%, transparent 100%);
     color: #fff;
     box-sizing: border-box; }
+  #ListMode .panel .tools {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); }
+  #ListMode .panel:hover .tools {
+    display: block; }

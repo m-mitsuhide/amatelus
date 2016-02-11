@@ -13,12 +13,15 @@ action = _action = require "../action/GenerateMode_action.cjsx"
 fs = require "fs-extra"
 ps = require "../js/pubsub.js"
 
+FloatingActionButton = MUI.FloatingActionButton
+AddBtn = require 'react-material-icons/icons/content/add'
 
 Paper = MUI.Paper
 RaisedButton = MUI.RaisedButton
 FlatButton = MUI.FlatButton
 IconButton = MUI.IconButton
 ScreenRotation = require 'react-material-icons/icons/device/screen-rotation'
+FullScreen = require 'react-material-icons/icons/image/crop-free'
 
 store = Redux.createStore (state,action)->
   if typeof state == 'undefined'
@@ -92,7 +95,13 @@ store = Redux.createStore (state,action)->
   else if action.type == "changeContent"
     state = Object.assign {}, state
     state.publicId = action.value
-    fs.copySync './public/' + state.templateId + "/" + state.publicId, "./public/" + state.templateId + "/preview"
+
+    try
+      fs.copySync './public/' + state.templateId + "/" + state.publicId, "./public/" + state.templateId + "/preview"
+    catch e
+      console.log e
+      ##新規作成時にb64画像のエラーが出る
+
     Object.assign state.publicList.preview, state.publicList[ state.publicId ], {id: "preview"}
     state.viewSrc =  _action.reloadViewer( state.templateId ).value
     ps.pub "GenerateMode.change", null, { publicId: state.publicId }
@@ -169,6 +178,17 @@ class GenerateMode extends React.Component
                   store.dispatch action.changeThumbnail file.name
     e.target.value = null
 
+  fullscreen: ()->
+    target = document.getElementById "iframe"
+    if target.webkitRequestFullscreen
+      target.webkitRequestFullscreen();
+    else if target.mozRequestFullScreen
+      target.mozRequestFullScreen();
+    else if target.msRequestFullscreen
+      target.msRequestFullscreen();
+    else if target.requestFullscreen
+      target.requestFullscreen();
+
   render:()->
     templateId = @state.templateId
     publicId = @state.publicId
@@ -194,6 +214,9 @@ class GenerateMode extends React.Component
           onChangeTitle={(e)->store.dispatch action.changeTitle e.target.value}
           onChangeThumbnail={@onChangeThumbnail}
         />
+        <IconButton onClick={@fullscreen} style={{position: "absolute", bottom: 105, left: 5}}>
+          <FullScreen color="#666"/>
+        </IconButton>
         <IconButton onClick={()=>store.dispatch action.rotation @state.rotation, store} style={{position: "absolute", bottom: 62, left: 5}}>
           <ScreenRotation color="#666"/>
         </IconButton>
@@ -215,6 +238,16 @@ class GenerateMode extends React.Component
               </div>
         }
       </div>
+      {
+        if @state.publicId != "preview"
+          <FloatingActionButton style={{position: "absolute", bottom: 10, right: 10}} primary={true} onClick={
+            ()->
+              store.dispatch action.setTemplateId templateId
+              store.dispatch action.changeContent "preview"
+            }>
+            <AddBtn/>
+          </FloatingActionButton>
+      }
       <Style type="GenerateMode"/>
     </div>
 

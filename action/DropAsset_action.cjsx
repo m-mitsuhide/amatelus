@@ -35,7 +35,7 @@ module.exports = {
 
         tmp
 
-      if publicData
+      if publicId != "preview" && publicData
         tmpArr = []
         list[ key ].forEach ( data )->
           tmpArr[ +data.index ] = data

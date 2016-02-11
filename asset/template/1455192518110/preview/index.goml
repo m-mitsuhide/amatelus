@@ -1,7 +1,7 @@
 <goml>
 	<head>
 		<geo id="g" type="Sphere" param="3 64 64" />
-		<mtl id="m" type="MeshPhong" param="color: #d33115; specular: #fff; ambient: #333;" />
+		<mtl id="m" type="MeshPhong" param="color: #68ccca; specular: #fff; ambient: #333;" />
 
 		<rdr frame="#jthree" camera="camera:first" param="preserveDrawingBuffer: true; antialias: true; clearColor: #fff;"/>
 	</head>

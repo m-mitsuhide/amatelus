@@ -54,6 +54,7 @@ store = Redux.createStore (state,action)->
     state = Object.assign {}, state, {
       templateId: action.templateId
       templateList: newList
+      saved: {}
       currentData: newList.filter( ( data )->
         if data.id == action.templateId then data else false )[ 0 ]
     }
@@ -92,9 +93,20 @@ store = Redux.createStore (state,action)->
     state.saved[ action.ext ] = true
 
   else if action.type == "switchPreview"
-    state = Object.assign( {}, state, {
+    state = Object.assign {}, state, {
       onPreview: action.value
-      })
+    }
+
+    if !action.value && ( !state.currentData.thumbnail || /b64$/.test state.currentData.thumbnail )
+      canvas = document.getElementById( "IFRAME" ).contentDocument.getElementsByTagName( "canvas" )[ 0 ]
+      if canvas
+         png = canvas.toDataURL().replace /^data:image\/png;base64,/, ""
+         fs.unlink "./asset/template/" + state.templateId + "/" + state.currentData.thumbnail
+         imgName = Date.now() + ".b64"
+         fs.writeFileSync "./asset/template/" + state.templateId + "/" + imgName, png, 'base64'
+
+         state.currentData.thumbnail = imgName
+         fs.writeFile "./asset/template/list.json", JSON.stringify state.templateList
 
   state
 
