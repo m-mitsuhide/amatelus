@@ -114,6 +114,18 @@ store = Redux.createStore (state,action)->
     fs.copySync basePath, './public/' + state.templateId + "/" + state.publicId
     fs.writeFile "./public/" + state.templateId + "/list.json", JSON.stringify state.publicListArr
 
+    if !state.publicList[ state.publicId ].thumbnail || /b64$/.test state.publicList[ state.publicId ].thumbnail
+      canvas = document.getElementById( "iframe" ).contentDocument.getElementsByTagName( "canvas" )[ 0 ]
+      if canvas
+         png = canvas.toDataURL().replace /^data:image\/png;base64,/, ""
+         fs.writeFileSync "./public/" + state.templateId + "/preview/capture.b64", png, 'base64'
+         fs.writeFileSync "./public/" + state.templateId + "/" + state.publicId + "/capture.b64", png, 'base64'
+
+         state.publicList.preview.thumbnail =
+         state.publicList[ state.publicId ].thumbnail = "capture.b64"
+         fs.writeFile "./public/" + state.templateId + "/list.json", JSON.stringify state.publicListArr
+
+
     ###request = ajax.post( path.generate )
     request.field "id", templateId
 
@@ -170,7 +182,7 @@ class GenerateMode extends React.Component
         <div className={ "device" + ( if @state.rotation then " rotation" else "")}>
           <img className="phone" src="./img/iphone.png"/>
           <div className={ "viewer" + ( if @state.isLandscape then " landscape" else "")}>
-            <iframe src={@state.viewSrc}/>
+            <iframe id="iframe" src={@state.viewSrc}/>
           </div>
         </div>
         <TitleArea
