@@ -94,6 +94,7 @@ store = Redux.createStore (state,action)->
     fs.copySync './public/' + state.templateId + "/" + state.publicId, "./public/" + state.templateId + "/preview"
     Object.assign state.publicList.preview, state.publicList[ state.publicId ], {id: "preview"}
     state.viewSrc =  _action.reloadViewer( state.templateId ).value
+    ps.pub "GenerateMode.change", null, { publicId: state.publicId }
 
   else if action.type == "generate"
     state = Object.assign {}, state
@@ -160,7 +161,8 @@ class GenerateMode extends React.Component
     <div id="GenerateMode">
 
       <div className="droper">
-          <DropAsset templateId={@props.templateId}
+          <DropAsset
+            templateId={@props.templateId}
             onPreview={()=>store.dispatch action.reloadViewer @props.templateId}
             onChange={(data)=>store.dispatch action.saveDropData data, @props.templateId}/>
       </div>

@@ -74,7 +74,7 @@ class Preview extends React.Component
       ["goml","html","css","js"].forEach ( ext )=>
         fs.readFile "./asset/template/" + id + "/index." + ext, "utf-8", ( err, text )->
           json[ ext ].forEach ( data )=>
-            text = text.replace data.tag, data.value || data.default || ""
+            text = text.replace data._tag, data.value || data.default || ""
 
           text = text.replace /(["'])\/share\//g, "$1https://mitsuhide.jthird.net/share/"
 

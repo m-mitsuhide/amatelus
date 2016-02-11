@@ -33,8 +33,9 @@ store = Redux.createStore (state,action)->
   if typeof state == 'undefined'
 
     state = {
-      templateId: null,
-      list: {},
+      templateId: null
+      publicId: null
+      list: {}
       listArr: []
       createSnippet: false
       snippetType: "text"
@@ -46,20 +47,24 @@ store = Redux.createStore (state,action)->
     }
 
   else if action.type == "setTemplateId"
-    state = Object.assign( {}, state, { templateId: action.templateId } )
+    state = Object.assign( {}, state, { templateId: action.value } )
     state.listArr.length = 0
 
   else if action.type == "setList"
+    state = Object.assign( {}, state, {
+      list: Object.assign( state.list, action.list )
+      publicId: action.publicId
+    } )
 
-    state = Object.assign( {}, state, { list: Object.assign( state.list, action.list ) } )
     tmpArr = [];
     for key of state.list
       state.list[ key ].forEach ( data )->
         data._ext = key
-        tmp = state.listArr[ +data.index ]
-        if tmp && tmp.type == data.type
-          data.value = tmp.value
-          data._returned = tmp._returned
+        if !action.publicId
+          tmp = state.listArr[ +data.index ]
+          if tmp && tmp.type == data.type
+            data.value = tmp.value
+            data._returned = tmp._returned
 
         tmpArr[ +data.index ] = data
 
@@ -119,6 +124,8 @@ class DropAsset extends React.Component
     @state = store.getState()
 
     ps.sub "DevelopMode.save", @saved
+    ps.sub "GenerateMode.change", @changed
+
     store.subscribe ()=>
       @updateState()
 
@@ -128,8 +135,13 @@ class DropAsset extends React.Component
     store.dispatch action.setList tmp
     @props.onChange @state.listArr
 
+  changed: ( ctx, e )=>
+    store.dispatch action.setTemplateId @props.templateId, ( data )=>
+      store.dispatch action.setList data, @props.templateId, e.publicId
+
   componentWillUnmount: ()->
     ps.unsub "DevelopMode.save", @saved
+    ps.unsub "GenerateMode.change", @changed
 
   render:()->
     props = @props

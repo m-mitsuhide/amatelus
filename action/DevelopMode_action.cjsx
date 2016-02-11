@@ -80,39 +80,31 @@ module.exports = {
     json = { goml: [], html: [], css: [], js: []}
 
     list.forEach ( data, idx )->
-      tmp = {
-        tag: data._tag
-        type: data.type
-        value: null
-      }
 
-      if data.default then tmp.default = data.default
+      json[ data._ext ].push data
 
-      json[ data._ext ].push tmp
+      if data.value && typeof data.value != "string"
 
-      if data.value
-        if typeof data.value == "string"
-          tmp.value = data.value
+        if data.type == "folder"
+          fs.copySync data.value[ 0 ].path.split( delimiter ).slice( 0, -1 ).join( "/" ), "./asset/template/" + templateId + "/preview/asset/" + data._returned.split( "/" )[ 0 ]
+          data.value = "asset/" + data._returned
         else
+          tmp = []
+          data.value.forEach ( file )->
+            tmp.push "asset/" + file.name
+            reader = new FileReader();
+            reader.onload = (e)->
+              buf = new Buffer(e.target.result.byteLength);
+              source = new Uint8Array(e.target.result);
+              for i in [0..e.target.result.byteLength]
+                buf[i] = source[i];
+              fs.writeFile "./asset/template/" + templateId + "/preview/asset/" + file.name, buf
+            reader.readAsArrayBuffer file
 
-          if data.type == "folder"
-            tmp.value = "asset/" + data._returned
-            fs.copySync data.value[ 0 ].path.split( delimiter ).slice( 0, -1 ).join( "/" ), "./asset/template/" + templateId + "/preview/asset/" + data._returned.split( "/" )[ 0 ]
+          if data.type == "file"
+            data.value = tmp[ 0 ]
           else
-            tmp.value = []
-            data.value.forEach ( file )->
-              tmp.value.push "asset/" + file.name
-              reader = new FileReader();
-              reader.onload = (e)->
-                buf = new Buffer(e.target.result.byteLength);
-                source = new Uint8Array(e.target.result);
-                for i in [0..e.target.result.byteLength]
-                  buf[i] = source[i];
-                fs.writeFile "./asset/template/" + templateId + "/preview/asset/" + file.name, buf
-              reader.readAsArrayBuffer file
-
-            if data.type == "file"
-              tmp.value = tmp.value[ 0 ]
+            data.value = tmp
 
 
     fs.writeFile "./asset/template/" + templateId + "/data.json", JSON.stringify json

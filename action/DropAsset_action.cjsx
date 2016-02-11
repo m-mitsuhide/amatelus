@@ -15,11 +15,13 @@ module.exports = {
 
     {
       type: 'setTemplateId'
-      templateId
+      value: templateId
     }
 
-  setList: ( data )->
+  setList: ( data, templateId, publicId )->
     list = {}
+    publicData = if publicId then JSON.parse fs.readFileSync "./public/" +  templateId + "/" + publicId + "/data.json"
+
     for key of data
       arr = data[ key ].match( /<%.+?%>/g ) || []
       list[ key ] = Array.prototype.map.call arr, ( val )->
@@ -30,10 +32,14 @@ module.exports = {
         }
         text.split( " " ).map ( t )->
           tmp[ t.split( "=" )[ 0 ] ] = t.split( "=" )[ 1 ].replace( /('|")/g, "" )
+        publicData && Object.assign tmp, publicData[ key ][ +tmp.index ]
         tmp
+
+
     {
-      type: "setList",
+      type: "setList"
       list
+      publicId
     }
 
   createSnippet: ( bool )->

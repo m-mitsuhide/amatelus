@@ -43,14 +43,16 @@ module.exports = {
 
   reloadViewer: ( id )->
 
-    json = JSON.parse fs.readFileSync "./public/" + id + "/preview/data.json", "utf-8"
+    json_path = "./public/" + id + "/preview/data.json"
+    !fs.existsSync json_path && fs.copySync "./asset/template/" + id + "/data.json", json_path
+    json = JSON.parse fs.readFileSync json_path, "utf-8"
 
 
     ["goml","html","css","js"].forEach ( ext )=>
       text = fs.readFileSync "./asset/template/" + id + "/index." + ext, "utf-8"
 
       json[ ext ].forEach ( data )=>
-        text = text.replace data.tag, data.value || data.default || ""
+        text = text.replace data._tag, data.value || data.default || ""
 
       text = text.replace /(["'])\/share\//g, "$1https://mitsuhide.jthird.net/share/"
 
@@ -70,39 +72,30 @@ module.exports = {
     json = { goml: [], html: [], css: [], js: []}
 
     list.forEach ( data, idx )->
-      tmp = {
-        tag: data._tag
-        type: data.type
-        value: null
-      }
+      json[ data._ext ].push data
 
-      if data.default then tmp.default = data.default
+      if data.value && typeof data.value != "string"
 
-      json[ data._ext ].push tmp
-
-      if data.value
-        if typeof data.value == "string"
-          tmp.value = data.value
+        if data.type == "folder"
+          fs.copySync data.value[ 0 ].path.split( delimiter ).slice( 0, -1 ).join( "/" ), "./public/" + templateId + "/preview/asset/" + data._returned.split( "/" )[ 0 ]
+          data.value = "asset/" + data._returned
         else
+          tmp = []
+          data.value.forEach ( file )->
+            tmp.push "asset/" + file.name
+            reader = new FileReader();
+            reader.onload = (e)->
+              buf = new Buffer(e.target.result.byteLength);
+              source = new Uint8Array(e.target.result);
+              for i in [0..e.target.result.byteLength]
+                buf[i] = source[i];
+              fs.writeFile "./public/" + templateId + "/preview/asset/" + file.name, buf
+            reader.readAsArrayBuffer file
 
-          if data.type == "folder"
-            tmp.value = "asset/" + data._returned
-            fs.copySync data.value[ 0 ].path.split( delimiter ).slice( 0, -1 ).join( "/" ), "./public/" + templateId + "/preview/asset/" + data._returned.split( "/" )[ 0 ]
+          if data.type == "file"
+            data.value = tmp[ 0 ]
           else
-            tmp.value = []
-            data.value.forEach ( file )->
-              tmp.value.push "asset/" + file.name
-              reader = new FileReader();
-              reader.onload = (e)->
-                buf = new Buffer(e.target.result.byteLength);
-                source = new Uint8Array(e.target.result);
-                for i in [0..e.target.result.byteLength]
-                  buf[i] = source[i];
-                fs.writeFile "./public/" + templateId + "/preview/asset/" + file.name, buf
-              reader.readAsArrayBuffer file
-
-            if data.type == "file"
-              tmp.value = tmp.value[ 0 ]
+            data.value = tmp
 
 
     fs.writeFile "./public/" + templateId + "/preview/data.json", JSON.stringify json

@@ -1,0 +1,19 @@
+<goml>
+	<head>
+		<geo id="g" type="Sphere" param="3 64 64" />
+		<mtl id="m" type="MeshPhong" param="color: <% index="0" type="color" title="meshcolor" %>; specular: #fff; ambient: #333;" />
+
+		<rdr frame="#jthree" camera="camera:first" param="preserveDrawingBuffer: true; antialias: true; clearColor: #fff;"/>
+	</head>
+	<body>
+		<scene>
+			<mesh id="earth" geo="#g" mtl="#m" style=""></mesh>
+
+
+			<camera style="position: 0 13 30; lookAtY: 11; cameraFar: 100000;">
+			    <light type="Dir" style="position: 1 3 5; lightColor: #9f9f9f;" />
+			</camera>
+			<light type="Amb" style="lightColor: #ccc;" />
+		</scene>
+	</body>
+</goml>
