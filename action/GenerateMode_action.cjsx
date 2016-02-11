@@ -44,7 +44,8 @@ module.exports = {
   reloadViewer: ( id )->
 
     json_path = "./public/" + id + "/preview/data.json"
-    !fs.existsSync json_path && fs.copySync "./asset/template/" + id + "/data.json", json_path
+    if !fs.existsSync json_path
+      fs.copySync "./asset/template/" + id + "/data.json", json_path
     json = JSON.parse fs.readFileSync json_path, "utf-8"
 
 
