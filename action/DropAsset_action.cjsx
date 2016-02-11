@@ -32,8 +32,15 @@ module.exports = {
         }
         text.split( " " ).map ( t )->
           tmp[ t.split( "=" )[ 0 ] ] = t.split( "=" )[ 1 ].replace( /('|")/g, "" )
-        publicData && Object.assign tmp, publicData[ key ][ +tmp.index ]
+
         tmp
+
+      if publicData
+        tmpArr = []
+        list[ key ].forEach ( data )->
+          tmpArr[ +data.index ] = data
+        publicData[ key ].forEach ( data )->
+          Object.assign tmpArr[ +data.index ], data
 
 
     {

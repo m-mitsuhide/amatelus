@@ -44,14 +44,15 @@ store = Redux.createStore (state,action)->
       viewSrc: ""
       rotation: false
       isLandscape: false
+      publicId: "preview"
       publicListArr: fs.readJsonSync "./public/" + action.templateId + "/list.json"
     }
 
-    if !state.publicListArr.length
-      state.publicListArr.unshift {
-        title: "New content"
-        id: "preview"
-      }
+    state.publicListArr.pop();
+    state.publicListArr.push {
+      title: "New content"
+      id: "preview"
+    }
 
     state.publicListArr.forEach ( list )->
       state.publicList[ list.id ] = list
@@ -118,11 +119,13 @@ store = Redux.createStore (state,action)->
       canvas = document.getElementById( "iframe" ).contentDocument.getElementsByTagName( "canvas" )[ 0 ]
       if canvas
          png = canvas.toDataURL().replace /^data:image\/png;base64,/, ""
-         fs.writeFileSync "./public/" + state.templateId + "/preview/capture.b64", png, 'base64'
-         fs.writeFileSync "./public/" + state.templateId + "/" + state.publicId + "/capture.b64", png, 'base64'
+         fs.unlink "./public/" + state.templateId + "/" + state.publicId + "/" + state.publicList[ state.publicId ].thumbnail
+         imgName = Date.now() + ".b64"
+         fs.writeFileSync "./public/" + state.templateId + "/preview/" + imgName, png, 'base64'
+         fs.writeFileSync "./public/" + state.templateId + "/" + state.publicId + "/" + imgName, png, 'base64'
 
          state.publicList.preview.thumbnail =
-         state.publicList[ state.publicId ].thumbnail = "capture.b64"
+         state.publicList[ state.publicId ].thumbnail = imgName
          fs.writeFile "./public/" + state.templateId + "/list.json", JSON.stringify state.publicListArr
 
 
