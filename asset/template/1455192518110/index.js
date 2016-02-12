@@ -6,7 +6,7 @@ jThree( function( j3 ) {
 
 
 	function rotateEarth() {
-		j3("#earth").animate({ rotateY: "+=3.14" }, 5000, rotateEarth);
+		j3("#earth").animate({ rotateY: "+=3.14" }, 50000, rotateEarth);
 	}
 	rotateEarth();
 

@@ -14,8 +14,8 @@
 	width: 80%;
 	height: 80%;
 	cursor: pointer;
-	background: url( <% index="0" type="file" title="部屋の見取り図" %> ) center;
-	background-size: cover;
+	background: url( <% index="0" type="file" title="部屋の見取り図" %> ) center no-repeat;
+	background-size: contain;
 }
 
 #loading {

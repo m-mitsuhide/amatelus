@@ -1,6 +1,6 @@
 <goml>
 	<head>
-	    <txr id="t" src="asset/R0010232.JPG"/>
+	    <txr id="t" src="asset/R0010010.JPG"/>
 		<geo id="g" type="Sphere" param="300 64 64" />
 		<mtl id="m" type="MeshBasic" param="map: #t;" />
 

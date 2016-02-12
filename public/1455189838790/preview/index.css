@@ -14,8 +14,8 @@
 	width: 80%;
 	height: 80%;
 	cursor: pointer;
-	background: url( asset/間取り.jpg ) center;
-	background-size: cover;
+	background: url( asset/018-700.gif ) center no-repeat;
+	background-size: contain;
 }
 
 #loading {
@@ -24,7 +24,7 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: url( "https://mitsuhide.jthird.net/share/jThird/img/loading.gif" ) no-repeat center;
+	background: url( "https://mitsuhide.jthird.net/share/jThird/img/loading0.gif" ) no-repeat center;
 	background-color: #000;
 	opacity: 0.7;
 }

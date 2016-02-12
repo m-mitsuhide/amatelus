@@ -1,16 +1,18 @@
 <goml>
 	<head>
-		<geo id="g" type="Sphere" param="3 64 64" />
-		<mtl id="m" type="MeshPhong" param="color: <% index="0" type="color" title="Meshcolor" default="#ccc" %>; specular: #fff; ambient: #333;" />
+	    <txr id="t" src="<% index="0" type="file" title="360度画像" %>"/>
+		<geo id="g" type="Sphere" param="1000 64 64" />
+		<mtl id="m" type="MeshBasic" param="map: #t;" />
+		<mtl id="stlMtl" type="MeshPhong" param="color: <% index="1" type="color" title="STLモデルの色" %>; specular: #fff; ambient: #333;" />
 
 		<rdr frame="#jthree" camera="camera:first" param="preserveDrawingBuffer: true; antialias: true; clearColor: #fff;"/>
 	</head>
 	<body>
 		<scene>
-			<mesh id="earth" geo="#g" mtl="#m" style=""></mesh>
+			<mesh id="earth" geo="#g" mtl="#m" style="scaleX: -1;"></mesh>
+            <mesh geo="<% index="2" type="file" title="STLモデルデータ" %>" mtl="#stlMtl"/>
 
-
-			<camera style="position: 0 13 30; lookAtY: 11; cameraFar: 100000;">
+			<camera style="position: 0 13 100; lookAtY: 11; cameraFar: 100000;">
 			    <light type="Dir" style="position: 1 3 5; lightColor: #9f9f9f;" />
 			</camera>
 			<light type="Amb" style="lightColor: #ccc;" />

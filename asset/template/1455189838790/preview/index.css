@@ -15,7 +15,7 @@
 	height: 80%;
 	cursor: pointer;
 	background: url( asset/018-700.gif ) center;
-	background-size: cover;
+	background-size: contain;
 }
 
 #loading {
