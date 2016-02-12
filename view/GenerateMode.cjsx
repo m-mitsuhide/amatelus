@@ -233,6 +233,10 @@ class GenerateMode extends React.Component
     else if target.requestFullscreen
       target.requestFullscreen();
 
+  onQRClick: ()=>
+    shell = require 'shell'
+    shell.openExternal( @state.showQR );
+
   render:()->
     templateId = @state.templateId
     publicId = @state.publicId
@@ -305,7 +309,7 @@ class GenerateMode extends React.Component
         if @state.showQR
           <div className="qrcode">
             <CloseBack onClose={()->store.dispatch action.toggleQR false}/>
-            <Paper className="frame" zDepth={2}>
+            <Paper onClick={@onQRClick} className="frame" zDepth={2}>
               <QRcode value={@state.showQR} />
             </Paper>
           </div>
