@@ -1,0 +1,20 @@
+<goml>
+	<head>
+	    <txr id="t" src="asset/R0010017.JPG"/>
+		<geo id="g" type="Sphere" param="300 64 64" />
+		<mtl id="m" type="MeshBasic" param="map: #t;" />
+
+		<rdr frame="#jthree" camera="camera:first" param="preserveDrawingBuffer: true; antialias: true; clearColor: #fff;"/>
+	</head>
+	<body>
+		<scene>
+			<mesh id="earth" geo="#g" mtl="#m" style="scaleX: -1;"></mesh>
+
+
+			<camera style="position: 0 13 30; lookAtY: 11; cameraFar: 100000;">
+			    <light type="Dir" style="position: 1 3 5; lightColor: #9f9f9f;" />
+			</camera>
+			<light type="Amb" style="lightColor: #ccc;" />
+		</scene>
+	</body>
+</goml>

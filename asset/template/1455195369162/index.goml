@@ -1,7 +1,7 @@
 <goml>
 	<head>
 		<geo id="g" type="Sphere" param="300 64 64" />
-		<txr id="t" src='<% index="0" type="file" title="360画像" default="/share/Mitsuhide/img/sky.png" %>'/>
+		<txr id="t" src='<% index="7" type="file" title="360image" %>'/>
 		<mtl id="m" type="MeshBasic" param="map: #t;" />
 		
 		<txr id="textTxr" html="div"/>
@@ -26,7 +26,7 @@
 	<body>
 		<scene>
 			<mesh id="earth" geo="#g" mtl="#m" style="scaleX: -1;"/>
-            <mmd model='<% index="5" type="folder" title="3Dモデル" default="/share/milbox/九十九みる/TsukumoMil_mmd.pmx" %>' motion="<% index="6" type="file" title="モーション" %>"/>
+            <mmd model='<% index="5" type="folder" title="3Dモデル" default="/share/milbox/九十九みる/TsukumoMil_mmd.pmx" %>' motion="<% index="6" type="file" title="motion" %>"/>
             <mesh id="title" geo="#textGeo" mtl="#textMtl" style="positionY: 23;"/>
 			    
 
