@@ -90,14 +90,34 @@ module.exports = {
           tmp = []
           data.value.forEach ( file )->
             tmp.push "asset/" + file.name
-            reader = new FileReader();
-            reader.onload = (e)->
-              buf = new Buffer(e.target.result.byteLength);
-              source = new Uint8Array(e.target.result);
-              for i in [0..e.target.result.byteLength]
-                buf[i] = source[i];
-              fs.writeFile "./public/" + templateId + "/preview/asset/" + file.name, buf
-            reader.readAsArrayBuffer file
+            if /JPG$/.test file.name ##THETA resize
+              img = new Image
+              img.onload = ( e )->
+                target = e.target;
+                canvas = document.createElement "canvas"
+                canvas.width = target.width / 2
+                canvas.height = target.height / 2
+
+                ctx = canvas.getContext "2d"
+                ctx.drawImage e.target, 0, 0, canvas.width, canvas.height
+
+                bin = atob(canvas.toDataURL( "image/jpeg" ).replace(/^.*,/, ''));
+                buf = new Buffer bin.length
+                for i in [0..bin.length]
+                  buf[i] = bin.charCodeAt i
+                fs.writeFile "./public/" + templateId + "/preview/asset/" + file.name, buf
+
+                URL.revokeObjectURL e.target.src
+              img.src = URL.createObjectURL file
+            else
+              reader = new FileReader();
+              reader.onload = (e)->
+                buf = new Buffer(e.target.result.byteLength);
+                source = new Uint8Array(e.target.result);
+                for i in [0..e.target.result.byteLength]
+                  buf[i] = source[i];
+                fs.writeFile "./public/" + templateId + "/preview/asset/" + file.name, buf
+              reader.readAsArrayBuffer file
 
           if data.type == "file"
             data.value = tmp[ 0 ]
