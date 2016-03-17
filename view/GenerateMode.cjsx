@@ -343,6 +343,8 @@ class GenerateMode extends React.Component
             <Paper className="frame" zDepth={2}>
               <QRcode value={@state.showQR} />
               <input type="text" value={@state.showQR} onFocus={(e)->setTimeout ()->e.target.select()}/>
+              <input type="text" value='<script src="https://jthird.net/amtb/amatelus.js"></script>' onFocus={(e)->setTimeout ()->e.target.select()}/>
+              <input type="text" value={'<div class="amt-player" data-id="' + @state.showQR.match( /\/([^\/]+)$/ )[ 1 ] + '"></div>'} onFocus={(e)->setTimeout ()->e.target.select()}/>
             </Paper>
           </div>
       }
