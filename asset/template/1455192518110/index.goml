@@ -1,6 +1,6 @@
 <goml>
 	<head>
-	    <txr id="t" src="<% index="0" type="file" title="360度画像" %>"/>
+	    <txr id="t" src="<% index="3" type="file" title="360image" %>"/>
 		<geo id="g" type="Sphere" param="1000 64 64" />
 		<mtl id="m" type="MeshBasic" param="map: #t;" />
 		<mtl id="stlMtl" type="MeshPhong" param="color: <% index="1" type="color" title="STLモデルの色" %>; specular: #fff; ambient: #333;" />

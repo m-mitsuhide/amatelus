@@ -2,13 +2,22 @@ jThree( function( j3 ) {
 
 	$( "#loading" ).remove();
 
-	j3.Orbit();
+	var orbit = j3.Orbit();
 	j3.MMD.play( true );
 	j3.MMD.edgeScale = 0;
     var stereo = j3.Stereo().stop();
+    var vr = j3.MobileVR().stop();
     
     function resize() {
-       stereo[ window.innerWidth > window.innerHeight ? "start" : "stop" ]();
+        if ( window.innerWidth > window.innerHeight ) {
+            stereo.start();
+            vr.start();
+            orbit.enabled = false;
+        } else {
+            stereo.stop();
+            vr.stop();
+            orbit.enabled = true;
+        }
     }
     resize();
     
@@ -19,7 +28,7 @@ jThree( function( j3 ) {
 	}
 	rotateEarth();
 
-
+    j3( "#title" ).three( 0 ).renderDepth = -1;
 
 
 

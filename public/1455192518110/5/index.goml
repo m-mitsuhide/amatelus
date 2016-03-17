@@ -1,0 +1,21 @@
+<goml>
+	<head>
+	    <txr id="t" src="asset/360img.jpg"/>
+		<geo id="g" type="Sphere" param="1000 64 64" />
+		<mtl id="m" type="MeshBasic" param="map: #t;" />
+		<mtl id="stlMtl" type="MeshPhong" param="color: #68bc00; specular: #fff; ambient: #333;" />
+
+		<rdr frame="#jthree" camera="camera:first" param="preserveDrawingBuffer: true; antialias: true; clearColor: #fff;"/>
+	</head>
+	<body>
+		<scene>
+			<mesh id="earth" geo="#g" mtl="#m" style="scaleX: -1;"></mesh>
+            <mesh geo="asset/voyager.stl" mtl="#stlMtl"/>
+
+			<camera style="position: 0 13 100; lookAtY: 11; cameraFar: 100000;">
+			    <light type="Dir" style="position: 1 3 5; lightColor: #9f9f9f;" />
+			</camera>
+			<light type="Amb" style="lightColor: #ccc;" />
+		</scene>
+	</body>
+</goml>

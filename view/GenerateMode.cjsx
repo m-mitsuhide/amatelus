@@ -97,6 +97,15 @@ store = Redux.createStore (state,action)->
     state.publicList[ state.publicId ].title = action.value
     fs.writeFile "./public/" + state.templateId + "/list.json", JSON.stringify state.publicListArr
 
+    xhr = new XMLHttpRequest()
+    data = new FormData()
+    data.append "name", "" + state.templateId + state.publicId
+    data.append "title", action.value
+    xhr.open "POST", "http://jthird.net/amtb/works/list.php", true
+    xhr.onload = ()->
+      console.log @response
+    xhr.send data
+
   else if action.type == "changeThumbnail"
     state = Object.assign {}, state
     state.publicList.preview.thumbnail = action.value
@@ -104,8 +113,9 @@ store = Redux.createStore (state,action)->
     fs.writeFile "./public/" + state.templateId + "/list.json", JSON.stringify state.publicListArr
 
   else if action.type == "changeContent"
-    state = Object.assign {}, state
-    state.publicId = action.value
+    state = Object.assign {}, state, {
+      publicId: action.value
+      }
 
     try
       fs.copySync './public/' + state.templateId + "/" + state.publicId, "./public/" + state.templateId + "/preview"
@@ -114,7 +124,7 @@ store = Redux.createStore (state,action)->
       ##新規作成時にb64画像のエラーが出る
 
     Object.assign state.publicList.preview, state.publicList[ state.publicId ], {id: "preview"}
-    state.viewSrc =  _action.reloadViewer( state.templateId ).value
+    state.viewSrc =  if state.publicId == "preview" then "" else _action.reloadViewer( state.templateId ).value
     ps.pub "GenerateMode.change", null, { publicId: state.publicId }
 
   else if action.type == "generate"
@@ -138,15 +148,26 @@ store = Redux.createStore (state,action)->
     if !state.publicList[ state.publicId ].thumbnail || /b64$/.test state.publicList[ state.publicId ].thumbnail
       canvas = document.getElementById( "iframe" ).contentDocument.getElementsByTagName( "canvas" )[ 0 ]
       if canvas
-         png = canvas.toDataURL().replace /^data:image\/png;base64,/, ""
-         state.publicList[ state.publicId ].thumbnail && fs.unlink "./public/" + state.templateId + "/" + state.publicId + "/" + state.publicList[ state.publicId ].thumbnail
-         imgName = Date.now() + ".b64"
-         fs.writeFileSync "./public/" + state.templateId + "/preview/" + imgName, png, 'base64'
-         fs.writeFileSync "./public/" + state.templateId + "/" + state.publicId + "/" + imgName, png, 'base64'
+        png = canvas.toDataURL().replace /^data:image\/png;base64,/, ""
+        jpeg = canvas.toDataURL( "image/jpeg" ).replace /^data:image\/jpeg;base64,/, ""
+        img = png.length > jpeg.length ? jpeg : png
+        state.publicList[ state.publicId ].thumbnail && fs.unlink "./public/" + state.templateId + "/" + state.publicId + "/" + state.publicList[ state.publicId ].thumbnail
+        imgName = Date.now() + ".b64"
+        fs.writeFileSync "./public/" + state.templateId + "/preview/" + imgName, png, 'base64'
+        fs.writeFileSync "./public/" + state.templateId + "/" + state.publicId + "/" + imgName, png, 'base64'
 
-         state.publicList.preview.thumbnail =
-         state.publicList[ state.publicId ].thumbnail = imgName
-         fs.writeFile "./public/" + state.templateId + "/list.json", JSON.stringify state.publicListArr
+        xhr = new XMLHttpRequest()
+        data = new FormData()
+        data.append "name", "" + state.templateId + state.publicId
+        data.append "thumbnail_name", imgName
+        xhr.open "POST", "http://jthird.net/amtb/works/list.php", true
+        xhr.onload = ()->
+          console.log @response
+        xhr.send data
+
+        state.publicList.preview.thumbnail =
+        state.publicList[ state.publicId ].thumbnail = imgName
+        fs.writeFile "./public/" + state.templateId + "/list.json", JSON.stringify state.publicListArr
 
 
     archive = archiver.create 'zip', {}
@@ -220,6 +241,16 @@ class GenerateMode extends React.Component
               fs.copy file.path, "./public/" + @state.templateId + "/" + @state.publicId + "/" + file.name, ( err )=>
                 if !err
                   store.dispatch action.changeThumbnail file.name
+
+    xhr = new XMLHttpRequest()
+    data = new FormData()
+    data.append "name", "" + @state.templateId + @state.publicId
+    data.append "thumbnail", file
+    xhr.open "POST", "http://jthird.net/amtb/works/list.php", true
+    xhr.onload = ()->
+      console.log @response
+    xhr.send data
+
     e.target.value = null
 
   fullscreen: ()->
@@ -233,9 +264,9 @@ class GenerateMode extends React.Component
     else if target.requestFullscreen
       target.requestFullscreen();
 
-  onQRClick: ()=>
-    shell = require 'shell'
-    shell.openExternal( @state.showQR );
+  ##onQRClick: ()=>
+    ##shell = require 'shell'
+    ##shell.openExternal( @state.showQR );
 
   render:()->
     templateId = @state.templateId
@@ -264,7 +295,7 @@ class GenerateMode extends React.Component
         />
 
         <div style={{display: if @state.publicId == "preview" then "none" else "block"}}>
-          <IconButton onClick={()=>store.dispatch action.toggleQR "http://jthird.net/amtb/works/" + templateId + publicId} style={{position: "absolute", top: 10, right: 10}}>
+          <IconButton onClick={()=>store.dispatch action.toggleQR "https://jthird.net/amtb/works/" + templateId + publicId} style={{position: "absolute", top: 10, right: 10}}>
             <ShareBtn color="rgb(255, 64, 129)"/>
           </IconButton>
         </div>
@@ -309,8 +340,9 @@ class GenerateMode extends React.Component
         if @state.showQR
           <div className="qrcode">
             <CloseBack onClose={()->store.dispatch action.toggleQR false}/>
-            <Paper onClick={@onQRClick} className="frame" zDepth={2}>
+            <Paper className="frame" zDepth={2}>
               <QRcode value={@state.showQR} />
+              <input type="text" value={@state.showQR} onFocus={(e)->setTimeout ()->e.target.select()}/>
             </Paper>
           </div>
       }
